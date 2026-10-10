@@ -23,8 +23,8 @@ Der Vater sieht jeden Morgen auf einer Seite alle heutigen Aktionen von Konzum, 
 * [x] Die Seite öffnet mit dem Tab nur für Lebensmittel. Ein weiterer Tab zeigt alle Aktionen.
 * [x] Bedienbar am Handy ab 360 px Breite und am PC. Schrift mindestens 20 px, Knöpfe mindestens 56 px hoch, keine horizontale Scrollleiste.
 * [x] Alle Texte der Oberfläche sind kroatisch.
-* [ ] Fehlt das Archiv des Tages oder schlägt der Download fehl, bleibt der letzte gute Stand online und der Lauf meldet den Fehler.
-* [ ] Collector (erledigt, 89 Tests) und Filterlogik (erledigt, 34 Tests) sind getestet, die Tests laufen in der Action vor dem Deploy.
+* [x] Fehlt das Archiv des Tages oder schlägt der Download fehl, bleibt der letzte gute Stand online und der Lauf meldet den Fehler.
+* [x] Collector (erledigt, 89 Tests) und Filterlogik (erledigt, 34 Tests) sind getestet, die Tests laufen in der Action vor dem Deploy.
 * [x] `akcije.json` bleibt unter 2 MB, damit die Seite auch mit schwachem Mobilfunk lädt.
 
 ## Implementation plan
@@ -51,6 +51,8 @@ Offen:
 
 * Die echten Produkte für die Merkliste. Die jetzige Liste ist ein Platzhalter.
 
-Offen vor Phase 4:
+Beantwortet am 10.10.2026: Subdomain akcije.
 
-* Name der Subdomain.
+Offen:
+
+* DNS Eintrag für akcije.nahobinoco.com bei Cloudflare.

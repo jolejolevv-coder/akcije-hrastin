@@ -1,6 +1,6 @@
 # Roadmap
 
-Stand 10.10.2026: Phase 0 bis 3 fertig. Die Seite läuft lokal. Phase 4 (Betrieb auf GitHub Pages) wartet auf Freigabe.
+Stand 10.10.2026: Phase 0 bis 4 fertig. Die Seite ist online unter https://me.nahobinoco.com/akcije-hrastin/ und wird zweimal täglich neu gebaut. Offen: DNS Eintrag für die Subdomain akcije, echte Produkte für die Merkliste, Rückmeldung des Lesers.
 
 Entschieden: Einzugsgebiet nur Osijek und Čepin, öffentliches Repo ist in Ordnung.
 
@@ -99,9 +99,31 @@ Bekannte Schwächen:
 2. Wo lag die Annahme falsch? Sammelbegriffe sollten einfach der billigste Treffer sein. Das lieferte Osterservietten unter Jaja und einen Schokoriegel unter Banane. Daraus wurden Ausschlusswörter, Gruppenfilter und der Vergleich je Einheit. Die erste Fassung markierte außerdem immer die erste Zeile als günstigste, auch bei gleichem Preis überall.
 3. Was besser spezifizieren? Die Produkte der Merkliste gehören vor den Bau geklärt, am besten mit Kassenzetteln des Vaters. Dann lassen sich fast alle Einträge über EAN lösen und die unscharfen Sammelbegriffe entfallen.
 
-## Phase 4: Betrieb
+## Phase 4: Betrieb (fertig 10.10.2026, Subdomain offen)
 
-GitHub Action mit Tageslauf, Deploy auf Pages, Subdomain, Verhalten bei fehlendem Archiv (Seite zeigt Stand von gestern mit Datum).
+Entschieden am 10.10.2026: Subdomain `akcije`, Repo anlegen und pushen.
+
+Gebaut:
+
+* Öffentliches Repo `jolejolevv-coder/akcije-hrastin`, Pages mit Build über Workflow.
+* `.github/workflows/deploy.yml`: Läufe um 10:40 und 14:40 UTC, bei jedem Push auf `main` und von Hand. Ablauf: Collector Tests, Preisverlauf vom letzten Deploy holen, Collector, Tests und Build der Seite, Deploy.
+* Schlägt Download oder Collector fehl, bricht der Lauf vor dem Deploy ab und der letzte gute Stand bleibt online.
+* Der Preisverlauf wird nicht committet. Er liegt als `data/history.json` auf der veröffentlichten Seite und wird von dort geholt. `data/history.json` im Repo ist nur der Startwert.
+
+Geprüft: Zwei Läufe grün, je rund 1,5 Minuten. Seite, `akcije.json` (5658 Aktionen, 17 Merklisteneinträge) und `history.json` antworten mit 200. Der zweite Lauf hat den Preisverlauf vom ersten Deploy übernommen.
+
+Offen:
+
+* Subdomain. `akcije.nahobinoco.com` hat noch keinen DNS Eintrag. Nötig ist bei Cloudflare ein CNAME `akcije` auf `jolejolevv-coder.github.io`, ohne Proxy. Erst danach die Domain in Pages setzen, sonst leitet GitHub auf eine Adresse um, die es nicht gibt.
+* Die Archivzeiten: laut Liste von cijene.dev wird das Archiv eines Tages abends gegen 22:00 zum letzten Mal aktualisiert. Die zwei Läufe sehen diese letzte Fassung nicht mehr. Ob das stört, ist nicht geprüft.
+* GitHub meldet, dass die verwendeten Actions auf Node 20 zielen und dass `ubuntu-latest` ab 19.10.2026 auf Ubuntu 26 wechselt. Bisher nur Hinweise, kein Fehler.
+* GitHub schaltet Zeitpläne in Repos ohne Aktivität nach 60 Tagen ab. Dann reicht ein Klick auf „Enable workflow“ oder ein Commit.
+
+### Retrospektive Phase 4
+
+1. Was lief gut? Erster Lauf sofort grün. Die Abbruchlogik brauchte keinen eigenen Code, weil der Collector schon mit Fehlercode endet.
+2. Wo lag die Annahme falsch? Der Abruf des Preisverlaufs folgte keinen Weiterleitungen. Pages liefert die Basisadresse mit http, die Seite antwortet mit einer Weiterleitung auf https. Der erste Lauf fiel deshalb still auf den Startwert zurück. Aufgefallen nur, weil ich die Logzeile gelesen habe. Außerdem liegt die Seite wegen der bestehenden Domain des Kontos unter me.nahobinoco.com und nicht unter github.io.
+3. Was besser spezifizieren? Stille Rückfälle brauchen ein sichtbares Signal. Für später: der Lauf soll eine Warnung in die Zusammenfassung schreiben, wenn er den Startwert nimmt.
 
 ## Später, nur nach Freigabe
 

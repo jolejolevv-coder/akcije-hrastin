@@ -2,7 +2,7 @@
 
 Eine statische Seite, die jeden Tag die Aktionen von Konzum, Lidl, Kaufland, Plodine und Spar in Osijek und Čepin zeigt. Datenquelle sind die gesetzlich vorgeschriebenen Preislisten der Ketten, gebündelt über das Tagesarchiv von cijene.dev.
 
-Stand: Collector und Seite mit Merkliste laufen lokal. Der automatische Betrieb auf GitHub Pages fehlt noch. Siehe `specs/roadmap.md`.
+Stand: online unter https://me.nahobinoco.com/akcije-hrastin/, neu gebaut zweimal täglich durch `.github/workflows/deploy.yml`. Siehe `specs/roadmap.md`.
 
 ## Collector
 
