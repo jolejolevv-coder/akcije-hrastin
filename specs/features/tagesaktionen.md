@@ -55,4 +55,4 @@ Beantwortet am 10.10.2026: Subdomain akcije.
 
 Offen:
 
-* DNS Eintrag für akcije.nahobinoco.com bei Cloudflare.
+* Keine. Der DNS Eintrag steht seit dem 10.10.2026.

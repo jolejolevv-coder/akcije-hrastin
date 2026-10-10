@@ -1,6 +1,6 @@
 # Roadmap
 
-Stand 10.10.2026: Phase 0 bis 4 fertig, die Seite ist online, seit dem Abend des 10.10. im Aussehen „Dnevni program“. Offen sind nur noch Dinge, die der Nutzer selbst tun muss: Link an den Leser geben, echte Produkte für die Merkliste nennen, optional der DNS Eintrag für die Subdomain.
+Stand 10.10.2026: Phase 0 bis 4 fertig, die Seite ist online, seit dem Abend des 10.10. im Aussehen „Dnevni program“. Offen sind nur noch Dinge, die der Nutzer selbst tun muss: Link an den Leser geben, echte Produkte für die Merkliste nennen, Die Subdomain akcije.nahobinoco.com ist seit dem 10.10.2026 eingerichtet, HTTPS erzwungen, die alte Adresse leitet weiter.
 
 Entschieden: Einzugsgebiet nur Osijek und Čepin, öffentliches Repo ist in Ordnung.
 
@@ -99,7 +99,7 @@ Bekannte Schwächen:
 2. Wo lag die Annahme falsch? Sammelbegriffe sollten einfach der billigste Treffer sein. Das lieferte Osterservietten unter Jaja und einen Schokoriegel unter Banane. Daraus wurden Ausschlusswörter, Gruppenfilter und der Vergleich je Einheit. Die erste Fassung markierte außerdem immer die erste Zeile als günstigste, auch bei gleichem Preis überall.
 3. Was besser spezifizieren? Die Produkte der Merkliste gehören vor den Bau geklärt, am besten mit Kassenzetteln des Vaters. Dann lassen sich fast alle Einträge über EAN lösen und die unscharfen Sammelbegriffe entfallen.
 
-## Phase 4: Betrieb (fertig 10.10.2026, Subdomain offen)
+## Phase 4: Betrieb (fertig 10.10.2026)
 
 Entschieden am 10.10.2026: Subdomain `akcije`, Repo anlegen und pushen.
 

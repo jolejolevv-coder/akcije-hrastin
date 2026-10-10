@@ -20,7 +20,7 @@ Der Skill wurde am 10.10.2026 auf eine Seite angesetzt, die schon gebaut und onl
 
 ## Ausgangslage
 
-- Bestehende Website oder Marke: Seite ist live unter https://me.nahobinoco.com/akcije-hrastin/. Keine Marke, kein Logo, keine Markendateien. Farben und Schrift sind eine Erstfassung ohne Designrichtung (Systemschrift, Dunkelblau auf warmem Hellgrau).
+- Bestehende Website oder Marke: Seite ist live unter https://akcije.nahobinoco.com/. Keine Marke, kein Logo, keine Markendateien. Farben und Schrift sind eine Erstfassung ohne Designrichtung (Systemschrift, Dunkelblau auf warmem Hellgrau).
 - Hauptziel der Seite: informieren. Ein einziger Leser, ein älterer Angehöriger, soll täglich die Aktionen der Supermärkte auf einen Blick sehen. Keine Anfragen, kein Verkauf.
 - Hosting: GitHub Pages, Deploy über GitHub Actions zweimal täglich. Steht.
 - Werkzeuge: impeccable ✅ · Playwright ➖ bewusst weggelassen, kein Chromium, Prüfung über den eingebauten Browser des Agenten · DataForSEO ➖ abgelehnt · Hosting-MCP ➖ nicht nötig · Formular-Ziel ➖ kein Formular
@@ -60,4 +60,4 @@ Jede Entscheidung der Person mit Datum, damit sie nicht erneut diskutiert wird.
 2. `npm --prefix web test` und `npm --prefix web run build`
 3. Upload: `git push`, der Workflow baut und veröffentlicht
 4. Cache leeren: nicht nötig
-5. Live prüfen: https://me.nahobinoco.com/akcije-hrastin/
+5. Live prüfen: https://akcije.nahobinoco.com/
