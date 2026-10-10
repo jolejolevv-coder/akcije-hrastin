@@ -50,7 +50,7 @@ jobs:
       # file from the repository is used.
       - name: Fetch the price history of the last deployment
         run: |
-          if curl --fail --silent --show-error --max-time 60 \
+          if curl --fail --location --silent --show-error --max-time 60 \
               --output data/history.download "${{ steps.pages.outputs.base_url }}/data/history.json" \
               && python -m json.tool data/history.download > /dev/null; then
             mv data/history.download data/history.json
