@@ -1,0 +1,86 @@
+name: Collect and deploy
+
+on:
+  schedule:
+    # Twice a day, in UTC. The archive of the day first appears around noon
+    # Croatian time and is updated again later.
+    - cron: "40 10 * * *"
+    - cron: "40 14 * * *"
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Never run two deployments at once. A running one is allowed to finish.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+
+      - id: pages
+        uses: actions/configure-pages@v5
+
+      - name: Test the collector
+        run: |
+          pip install -r requirements-dev.txt
+          python -m pytest -q
+
+      # The price history lives on the published site, not in git, because it
+      # changes almost completely every day. If the site has none yet, the seed
+      # file from the repository is used.
+      - name: Fetch the price history of the last deployment
+        run: |
+          if curl --fail --silent --show-error --max-time 60 \
+              --output data/history.download "${{ steps.pages.outputs.base_url }}/data/history.json" \
+              && python -m json.tool data/history.download > /dev/null; then
+            mv data/history.download data/history.json
+            echo "Using the history of the last deployment"
+          else
+            rm -f data/history.download
+            echo "No usable history online, using the seed from the repository"
+          fi
+
+      # If this step fails, nothing is deployed and the last good site stays online.
+      - name: Collect today's promotions
+        run: python -m collector
+
+      - name: Test and build the site
+        run: |
+          npm ci --prefix web
+          npm test --prefix web
+          npm run build --prefix web
+          cp data/history.json web/dist/data/history.json
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: web/dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

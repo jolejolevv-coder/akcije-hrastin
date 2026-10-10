@@ -1,0 +1,11 @@
+{
+  "archive_list_url": "https://api.cijene.dev/v0/list",
+  "cities": ["Osijek", "Čepin"],
+  "chains": [
+    {"id": "konzum", "name": "Konzum", "reference": "best_price_30"},
+    {"id": "lidl", "name": "Lidl", "reference": "best_price_30"},
+    {"id": "kaufland", "name": "Kaufland", "reference": "best_price_30"},
+    {"id": "plodine", "name": "Plodine", "reference": "history"},
+    {"id": "spar", "name": "Spar", "reference": "best_price_30"}
+  ]
+}

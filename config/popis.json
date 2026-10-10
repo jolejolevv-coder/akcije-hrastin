@@ -1,0 +1,21 @@
+{
+  "items": [
+    {"name": "Kava Franck Jubilarna 400 g", "barcodes": ["3858881085596"]},
+    {"name": "Mlijeko trajno Dukat 2,8 % 1 l", "barcodes": ["3850354006053", "3850354016830", "3850354006077"]},
+    {"name": "Maslac 250 g (Vindija ili Zdenka)", "barcodes": ["3850108060102", "3858888590345"]},
+    {"name": "Margarin Margo 400 g", "barcodes": ["3856015327253"]},
+    {"name": "Suncokretovo ulje 1 l", "keywords": ["ulje", "sunc", "1"], "exclude": ["sprej", "hlad", "bio", "4x1", "10 l", "5 l"], "category": "osnovno"},
+    {"name": "Šećer kristal 1 kg", "keywords": ["secer", "krist"], "exclude": ["25", "smed", "trsc"], "category": "osnovno"},
+    {"name": "Brašno glatko", "keywords": ["brasno", "glatko"], "category": "osnovno"},
+    {"name": "Jaja", "keywords": ["jaja"], "exclude": ["salv", "uskrs", "cokolad", "kinder", "prepel", "boja"], "category": "mlijecni"},
+    {"name": "Pašteta Argeta kokošja 95 g", "barcodes": ["3838975567009"]},
+    {"name": "Čajna kobasica Gavrilović", "barcodes": ["3858892725849", "3858890203837"]},
+    {"name": "Majoneza Zvijezda tuba 165 g", "barcodes": ["3858882210263"]},
+    {"name": "Lino Lada Milk 350 g", "barcodes": ["3850104267109"]},
+    {"name": "Kvasac svježi Digo 42 g", "barcodes": ["3858887683444"]},
+    {"name": "Mineralna voda Jamnica 1,5 l", "barcodes": ["3859888152045"]},
+    {"name": "Coca Cola 2 l", "barcodes": ["5449000000286"]},
+    {"name": "Banane", "keywords": ["banan"], "exclude": ["choco", "cokol", "zalogaj", "pire", "cips", "suh", "sok", "kasic", "jogurt"], "category": "voce_povrce"},
+    {"name": "Krumpir", "keywords": ["krumpir"], "exclude": ["cips", "pire", "smrz", "slatki", "batat"], "category": "voce_povrce"}
+  ]
+}

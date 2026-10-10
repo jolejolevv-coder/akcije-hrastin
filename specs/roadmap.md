@@ -1,0 +1,112 @@
+# Roadmap
+
+Stand 10.10.2026: Phase 0 bis 3 fertig. Die Seite läuft lokal. Phase 4 (Betrieb auf GitHub Pages) wartet auf Freigabe.
+
+Entschieden: Einzugsgebiet nur Osijek und Čepin, öffentliches Repo ist in Ordnung.
+
+## Phase 0: Daten sichten (fertig 10.10.2026)
+
+Ergebnis in `docs/datenformat.md`. Der Ansatz trägt: alle fünf Ketten markieren Aktionen, 22 Filialen im Gebiet, 5658 Aktionsartikel am Stichtag, Ausgabedatei rund 0,8 MB.
+
+Drei Befunde ändern den Plan:
+
+1. Der reguläre Preis fehlt im Archiv. Der Rabatt lässt sich nur gegen das 30 Tage Tief ausweisen, bei Plodine gar nicht ohne Zusatzquelle.
+2. Kategorien sind zu grob für einen brauchbaren Filter, bei Plodine leer.
+3. Das Archiv ist erst am späten Vormittag fertig.
+
+### Retrospektive Phase 0
+
+1. Was lief gut? Ein Archiv, ein Format, die Sichtung brauchte drei kurze Skripte.
+2. Wo lag die Annahme falsch? Angenommen war ein regulärer Preis neben dem Aktionspreis. Tatsächlich überschreibt der Aktionspreis die Spalte `price`. Die erste Auswertung fand deshalb null Aktionen.
+3. Was besser spezifizieren? Akzeptanzkriterien erst festschreiben, nachdem die Rohdaten einmal gesichtet sind. Felder nie nach ihrem Namen deuten, sondern an Beispielzeilen prüfen.
+
+## Phase 1: Collector (fertig 10.10.2026)
+
+Entschieden am 10.10.2026: Plodine ohne Rabattangabe starten und Vortagespreis mitschreiben. Eigene Feingruppen über Stichwörter. Aktualisierung gegen Mittag ist in Ordnung.
+
+Gebaut: `python -m collector` lädt das neueste Archiv und schreibt `data/akcije.json` und `data/history.json`. 75 Tests, alle grün. Lauf gegen das echte Archiv vom 10.10.2026: 5658 Aktionen, 1,5 MB, 13 Sekunden ohne Download.
+
+Stand der Daten am ersten Tag:
+
+* Rabattangabe bei Konzum 1236 von 1643, Lidl 93 von 99, Kaufland 587 von 851, Spar 1118 von 1118.
+* Plodine 12 von 1947. Die Zahl wächst erst mit jeder neu startenden Aktion. Ein Nachladen älterer Archive würde sie sofort füllen (je Tag rund 130 MB Download).
+* Warengruppen: 14 Gruppen plus Ostalo. 1104 Artikel in Ostalo, davon fast alle Plodine Non Food (Textil, Geschirr, Elektro). Stichprobe von 60 Lebensmitteln: 57 richtig. Keine harte Messung, nur ein Anhaltspunkt.
+
+Bekannte Schwächen:
+
+* Die Stichwortliste ordnet nach dem ersten Treffer. Mischprodukte landen manchmal falsch (Sirni namaz mit Tuna unter Riba).
+* Der Zeitstempel des Archivs von heute wurde um 14:28 noch einmal aktualisiert. Das Archiv ändert sich also im Lauf des Tages. Für Phase 4 heißt das: zwei Läufe am Tag einplanen.
+* `data/history.json` hat 2,3 MB und ändert sich täglich fast vollständig. Täglich ins Repo committen würde es aufblähen. Für Phase 4: die Datei vom letzten Deploy der Seite holen statt committen.
+* Spar Adressen tragen die Filialnummer im Text (`Osjecka 21 87155 Spar`). Bereinigung gehört in die Anzeige, Phase 2.
+
+### Retrospektive Phase 1
+
+1. Was lief gut? Die Sichtung aus Phase 0 hat getragen, der Collector lief beim ersten Versuch gegen die echten Daten. Stichwörter in einer JSON Datei statt im Code machten zwei schnelle Korrekturrunden möglich.
+2. Wo lag die Annahme falsch? Erste Fassung der Stichwörter mit reinem Wortanfang war zu grob (`pan` traf Panceta, `caj` traf Čajna kobasica, `riba` traf Ribani sir). Daraus entstand die Regel für ganze Wörter mit `=`. Außerdem lieferte ein zweiter Lauf am selben Tag zunächst andere Plodine Rabatte als der erste. Behoben, jetzt per Test abgesichert.
+3. Was besser spezifizieren? Für die Warengruppen fehlt ein Abnahmemaß. Vorschlag für später: eine feste Liste von 200 von Hand geprüften Artikeln als Regressionstest.
+
+## Phase 2: Seite (fertig 10.10.2026)
+
+Vorgabe: kroatisch und seniorengerecht.
+
+Gebaut im Ordner `web`: eine Seite mit Suchfeld, Auswahl der Trgovina, Auswahl der Vrsta proizvoda (Lebensmittel zuerst, mit Anzahl je Gruppe), drei Sortierungen und Karten je Aktion. Je 30 Karten, dann „Prikaži još“. 26 Tests für Filter und Formatierung, Typprüfung und Build laufen durch. Die gebaute Seite hat ohne Daten 13 KB.
+
+Was für den älteren Leser getan ist: Grundschrift 20 px, alle Knöpfe 56 px hoch, gewählter Knopf dunkel mit Haken, keine versteckten Menüs, kein Fachwort, Suche findet auch ohne Sonderzeichen (secer findet šećer), Produktnamen in Großbuchstaben werden in normale Schreibweise gebracht, Datum ausgeschrieben, gelber Hinweis bei Daten älter als ein Tag.
+
+Im Browser geprüft bei 375 px und in Desktopbreite: Laden ohne Konsolenfehler, Filter nach Kette und Gruppe, Suche, Sortierung, Nachladen, leeres Ergebnis mit Hinweistext, keine horizontale Scrollleiste.
+
+Dazu das Nachladen von 14 Tagesarchiven (26.09. bis 09.10.2026): Plodine zeigt jetzt bei 1361 von 1947 Aktionen einen Rabatt statt bei 12.
+
+Bekannte Schwächen:
+
+* Am Handy liegen 16 Gruppenknöpfe vor der ersten Karte. Das sind mehrere Bildschirmlängen Scrollen. Ob das stört, muss der Vater sagen.
+* Die Standardsortierung nach Rabatt zeigt zuerst Restposten für 0,10 € bei Spar. Sachlich richtig, aber kein guter erster Eindruck.
+* Die Namen bleiben teils kryptisch, weil die Ketten selbst abkürzen (`Sv.kare bez kostiju`).
+* Die Angabe „Cijena za jedinicu mjere“ nennt keine Einheit, weil die Einheiten in den Daten je Kette anders und unzuverlässig sind.
+* Kein dunkles Farbschema, bewusst weggelassen.
+* Die Darstellung hat noch niemand aus der Zielgruppe gesehen.
+
+### Retrospektive Phase 2
+
+1. Was lief gut? Die Trennung in reine Logik (`filter.ts`, `format.ts`) und DOM (`render.ts`) machte die Tests billig. Das Nachladen lief in wenigen Minuten nebenher und hat zugleich den echten Download bewiesen.
+2. Wo lag die Annahme falsch? Erste Fassung schrieb jedes Wort groß (`Hrana Za Pse`), das wirkt im Kroatischen falsch. Jetzt Satzschreibung, nur die Marke bleibt groß. Die Vorschaukonfiguration lag zuerst im falschen Ordner.
+3. Was besser spezifizieren? Die Startansicht. Was der Vater als Erstes sehen will (alles, nur Lebensmittel, seine Stammkette) steht in keiner Spec und entscheidet über den Nutzen.
+
+## Phase 3: Merkliste und Tabs (fertig 10.10.2026)
+
+Entschieden am 10.10.2026: Merkliste als Datei im Repo. Startansicht nur Lebensmittel. Dazu ein eigener Tab mit allen Aktionen zum Stöbern.
+
+Gebaut:
+
+* Drei Tabs: „Hrana i piće“ (Start, 12 Gruppen, 2663 Aktionen am Stichtag), „Moj popis“, „Sve akcije“ (alle 16 Gruppen, 5658 Aktionen).
+* Merkliste in `config/popis.json`. Zwei Arten von Einträgen: Markenartikel über EAN (billigster Preis gewinnt) und Sammelbegriffe über Stichwörter (billigster Preis je Einheit gewinnt). Regeln stehen oben in `collector/watchlist.py`.
+* Je Eintrag eine Karte mit dem Preis in jeder Kette, günstigste zuerst. Hervorgehoben wird nur ein echter Bestpreis. Bei gleichem Preis überall steht „Ista cijena u svim trgovinama“.
+* Die Merkliste vergleicht alle Preise, nicht nur Aktionen.
+* Tests: 89 im Collector, 34 für die Seite.
+
+Die 17 Einträge der Startliste habe ich gewählt, nicht der Nutzer: elf Markenartikel, die mindestens vier Ketten führen, und sechs Sammelbegriffe. Sie sind ein Platzhalter und sollen ersetzt werden.
+
+Bekannte Schwächen:
+
+* Sammelbegriffe sind unscharf. Am Stichtag fand „Suncokretovo ulje 1 l“ bei Konzum nur ein Bio Öl für 3,00 €, weil Konzum den Namen anders abkürzt. Bei Lidl fehlt der Eintrag ganz. Ausschlusswörter helfen, müssen aber je Eintrag gepflegt werden.
+* Der Preis je Einheit ist zwischen den Ketten nicht immer vergleichbar (Kaufland rechnet Kvasac je Stück, die anderen je Kilo).
+* Markenartikel über EAN sind verlässlich, decken aber Eigenmarken nicht ab. Lidl taucht deshalb seltener auf.
+* Nebenbei behoben: Spar Haushaltswaren landeten über Stichwörter in Lebensmittelgruppen (eine Schaufel „Lopatica“ unter Meso). Die Quellgruppe „Proizvodi za kućanstvo“ gilt jetzt direkt.
+
+### Retrospektive Phase 3
+
+1. Was lief gut? Der EAN Abgleich war sofort richtig, fünf Ketten nebeneinander mit plausiblen Preisen. Die Tabs brauchten kaum neuen Code, weil Filter und Anzeige schon getrennt waren.
+2. Wo lag die Annahme falsch? Sammelbegriffe sollten einfach der billigste Treffer sein. Das lieferte Osterservietten unter Jaja und einen Schokoriegel unter Banane. Daraus wurden Ausschlusswörter, Gruppenfilter und der Vergleich je Einheit. Die erste Fassung markierte außerdem immer die erste Zeile als günstigste, auch bei gleichem Preis überall.
+3. Was besser spezifizieren? Die Produkte der Merkliste gehören vor den Bau geklärt, am besten mit Kassenzetteln des Vaters. Dann lassen sich fast alle Einträge über EAN lösen und die unscharfen Sammelbegriffe entfallen.
+
+## Phase 4: Betrieb
+
+GitHub Action mit Tageslauf, Deploy auf Pages, Subdomain, Verhalten bei fehlendem Archiv (Seite zeigt Stand von gestern mit Datum).
+
+## Später, nur nach Freigabe
+
+Links zu den aktuellen Prospekten, Preisverlauf je Produkt, Hinweis per Telegram bei Tiefpreis auf der Merkliste.
+
+## Retrospektiven
+
+Noch keine.

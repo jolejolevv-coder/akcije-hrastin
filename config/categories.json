@@ -1,0 +1,105 @@
+{
+  "fallback": "ostalo",
+  "direct_source_map": {
+    "Kozmetika": "higijena",
+    "Toaletne potrepštine": "higijena",
+    "Sredstva za čišćenje": "ciscenje",
+    "Proizvodi za kućanstvo": "ciscenje"
+  },
+  "fallback_source_map": {
+    "Piće": "pica",
+    "Pića": "pica"
+  },
+  "categories": [
+    {
+      "id": "ljubimci",
+      "name": "Kućni ljubimci",
+      "food": false,
+      "keywords": ["hrana za pse", "hrana za macke", "za pse", "za macke", "whiskas", "pedigree", "felix", "friskies", "kitekat", "purina", "gourmet gold", "sheba", "chappi", "dreamies", "=pse", "=psa", "=macke", "=macka", "proof", "kitty", "=one", "buddy", "cesar", "wanpy", "pijesak", "petties", "=cat", "=dog", "=cats", "=dogs"]
+    },
+    {
+      "id": "higijena",
+      "name": "Kozmetika i higijena",
+      "food": false,
+      "keywords": ["sampon", "regenerator", "gel za tus", "gel za brij", "pjena za brij", "dezodorans", "pasta za zube", "zubna pasta", "cetkica za zube", "sapun", "toaletni papir", "toal papir", "papirnate maramice", "maramice", "ulosci", "pelene", "krema za", "losion", "britvic", "nivea", "dove", "colgate", "palmolive", "pampers", "always", "gillette", "tamponi", "=deo", "micelarn", "toaletna voda", "parfem", "parodontax", "palette", "boja za kosu", "lak za kosu", "brijac", "vata", "stapici za usi", "labello", "garnier", "schauma", "syoss", "rexona", "axe", "old spice", "sensodyne", "oral b", "listerine", "violeta", "zewa", "paloma"]
+    },
+    {
+      "id": "ciscenje",
+      "name": "Čišćenje i kućanstvo",
+      "food": false,
+      "keywords": ["deterdzent", "omeksivac", "sredstvo za", "tablete za perilicu", "za pranje", "za ciscenje", "vrece za smece", "vrecice za smece", "spuzv", "papirnati rucnici", "rucnici papirnati", "kuhinjski rucnici", "folija", "ariel", "persil", "lenor", "domestos", "fairy", "somat", "finish", "bref", "ajax", "ornel", "svijec", "baterij", "zarulj", "=jar", "=cif", "=faks", "omek", "perwoll", "likvi", "duel", "krpa", "zica", "osvjezivac", "rukavice", "wc", "odmascivac", "izbjeljivac", "kamenac", "vanish", "pronto", "glade", "air wick", "calgon", "rubel", "violeta deterdzent", "kapsule za pranje"]
+    },
+    {
+      "id": "smrznuto",
+      "name": "Smrznuto i sladoled",
+      "food": true,
+      "keywords": ["smrznut", "zamrznut", "sladoled", "ledo", "duboko smrz", "pizza", "pomfrit", "kornet", "snjeguljica", "=king", "=slad", "nuii", "magnum"]
+    },
+    {
+      "id": "slatko",
+      "name": "Slatkiši i grickalice",
+      "food": true,
+      "keywords": ["cokolad", "keks", "napolitank", "bombon", "bombonijer", "cips", "flips", "kreker", "kokice", "grickalic", "zvakac", "lizal", "praline", "vafl", "biskvit", "kolac", "torta", "rolada", "medenjac", "milka", "dorina", "kinder", "nutella", "lino lada", "linolada", "bajadera", "domacica", "jadro", "jaffa", "smoki", "chio", "kikiriki", "pistac", "tortica", "bananko", "toffifee", "raffaello", "ferrero", "merci", "lindt", "snickers", "twix", "bounty", "kitkat", "oreo", "haribo", "orbit", "mentos", "ratluk", "halva", "muffin", "cajni kolut", "petit", "plazma", "munchmallow", "perec", "grickal", "ritz", "pringles", "lays", "kroki", "ki-ki", "kiki", "mogyi", "=cok", "=kras", "=mars", "=tuc", "=stark", "=suncokret", "slani stapici", "stapici slani", "chips", "snack", "party trik", "desert", "=zele", "zele bombon", "gumeni bombon", "nesquik", "kakao"]
+    },
+    {
+      "id": "pica",
+      "name": "Sokovi i voda",
+      "food": true,
+      "keywords": ["sok", "sokovi", "voda", "nektar", "sirup", "coca", "cola", "pepsi", "fanta", "sprite", "schweppes", "cedevita", "jamnica", "studena", "ledeni caj", "ice tea", "energetsk", "red bull", "limunada", "gazirano pice", "sensation", "juicy", "pago", "romerquelle", "kiseljak", "mineralna", "=jana", "=pipi", "energy drink", "=hell", "monster", "napitak", "ledeni", "juice", "cockta", "gaz pice"]
+    },
+    {
+      "id": "kava",
+      "name": "Kava i čaj",
+      "food": true,
+      "keywords": ["kava", "kave", "cappuccino", "nescafe", "jacobs", "barcaffe", "cikorija", "kras express", "espresso", "=caj", "=cajevi", "caj od", "biljni caj", "vocni caj", "kakao prah", "kapsule za kavu"]
+    },
+    {
+      "id": "alkohol",
+      "name": "Pivo, vino i žestoko",
+      "food": true,
+      "keywords": ["pivo", "vino", "rakija", "liker", "vodka", "votka", "whisky", "whiskey", "viski", "pelinkovac", "konjak", "brandy", "vinjak", "sljivovic", "travaric", "lozovac", "pjenusac", "sampanjac", "grasevina", "malvazija", "plavac", "ozujsko", "karlovacko", "staropramen", "heineken", "jagermeister", "amaro", "cider", "radler", "vilijamovka", "viljamovka", "medica", "gemist", "=pan", "=gin", "=rum", "=vina", "=piva", "aperol", "prosecco"]
+    },
+    {
+      "id": "riba",
+      "name": "Riba",
+      "food": true,
+      "keywords": ["tuna", "sardin", "srdel", "losos", "oslic", "skus", "lignj", "skamp", "kozic", "pastrv", "bakalar", "haring", "dagnj", "saran", "smudj", "orada", "brancin", "plodovi mora", "rio mare", "=som", "=eva", "incun", "file oslic", "riblji stapici", "surimi", "=riba", "=ribe", "riblj", "tunjevin", "filet lososa"]
+    },
+    {
+      "id": "meso",
+      "name": "Meso i suhomesnato",
+      "food": true,
+      "keywords": ["meso", "mesni", "svinj", "junet", "junec", "govedj", "govedin", "telet", "pilet", "pilec", "purec", "janjet", "kotlet", "vratina", "odrezak", "odresci", "mljeveno", "cevap", "pljeskavic", "kobasic", "hrenovk", "sunka", "slanina", "salama", "parizer", "prsut", "kulen", "pancet", "spek", "pasteta", "mortadela", "cajna", "zimska", "bataci", "zabatak", "krilca", "krila", "rebra", "carsko", "buncek", "cvarci", "kare", "lopatica", "gulas", "jetra", "jetrica", "dimljen", "gavrilovic", "cekin", "vindon", "pipo", "perutnina", "mesna", "nareza", "virsl", "debrecin", "kranjsk", "rostilj", "burger", "tirolska", "pureca", "prsa", "trajna", "polutrajna", "=but", "=mast", "=pik", "=sv", "=jun", "slabina", "grudi", "pileci file", "pureci file", "posebna salama", "suho meso", "suhi vrat", "suha rebra", "leberkas", "klipic", "ombolo", "lungic", "plecka", "koljenica", "podravka pasteta", "argeta", "jetrena", "kokosj"]
+    },
+    {
+      "id": "mlijecni",
+      "name": "Mlijeko, sir i jaja",
+      "food": true,
+      "keywords": ["mlijeko", "mlijecn", "sirni", "jogurt", "vrhnje", "maslac", "margarin", "jaja", "kefir", "kajmak", "puding", "skuta", "mozzarella", "gauda", "gouda", "edamer", "trapist", "ementaler", "feta", "parmezan", "mascarpone", "zdenka", "dukat", "vindija", "meggle", "z bregov", "milfina", "acidofil", "mileram", "slatko vrhnje", "dukatos", "activia", "fruit yog", "tost sir", "topljeni", "ribanac", "svjezi sir", "president", "philadelphia", "=sir", "sirevi", "kiselo vrhnje", "kiselo mlijeko", "tekuci jogurt", "abc sir", "sirni namaz", "=abc", "vrhnje za"]
+    },
+    {
+      "id": "kruh",
+      "name": "Kruh i peciva",
+      "food": true,
+      "keywords": ["kruh", "pecivo", "peciva", "kifl", "burek", "lepinj", "kroasan", "croissant", "bageta", "baguette", "tortilj", "dvopek", "krafn", "strudl", "pogac", "slanac", "mlinci", "zemicka", "kajzeric", "pinca", "lisnato", "donut", "buhtl", "savijac", "prezle", "krusne mrvice", "=pita", "tortil", "bruschett", "=tost", "=toast", "tost kruh"]
+    },
+    {
+      "id": "osnovno",
+      "name": "Brašno, ulje i tjestenina",
+      "food": true,
+      "keywords": ["brasno", "ulje", "secer", "riza", "tjest", "spageti", "spaghetti", "makaron", "penne", "fusilli", "rezanci", "njoki", "ocat", "kvasac", "prasak za pecivo", "vanilin", "krupica", "palenta", "zobene", "pahuljic", "musli", "muesli", "cornflakes", "dzem", "marmelad", "pekmez", "ajvar", "kecap", "ketchup", "majonez", "senf", "umak", "passata", "pasirana", "pelati", "koncentrat", "juha", "kocka", "vegeta", "zacin", "papar", "kiseli", "krastavci", "feferon", "masline", "konzerv", "grasak", "leca", "slanutak", "zdravo", "podravka", "zvijezda", "dolcela", "dr oetker", "oetker", "tofu", "sardel", "gotovo jelo", "instant", "preljev", "krutoni", "tortelini", "lazanje", "sezam", "grozdice", "skrob", "gustin", "zelatin", "slag", "margo", "barilla", "de cecco", "=sol", "=med", "=mak", "=fant", "=tj", "tjes", "soda bikarbona", "kukuruz secerac", "kasica", "kasa", "curry", "kotanyi", "mjesavina za", "fitness", "zitarice", "fuzi", "=sec", "aceto", "kvinoj"]
+    },
+    {
+      "id": "voce_povrce",
+      "name": "Voće i povrće",
+      "food": true,
+      "keywords": ["jabuk", "banan", "naranc", "limun", "mandarin", "klementin", "grozd", "krusk", "sljiv", "bresk", "nektarin", "jagod", "lubenic", "dinj", "kivi", "ananas", "avokado", "grejp", "borovnic", "malin", "tresnj", "visnj", "smokv", "sipak", "krumpir", "cesnjak", "mrkv", "rajcic", "paradajz", "paprik", "krastav", "kupus", "salata", "zelje", "tikv", "patlidzan", "brokul", "cvjetac", "blitv", "spinat", "poriluk", "celer", "persin", "cikl", "mahun", "gljiv", "sampinjon", "bundev", "rotkvic", "batat", "kelj", "rikula", "matovilac", "ljesnjak", "badem", "kesten", "datulj", "mango", "=luk", "=grah", "=orah", "orasi", "svjeze voce", "svjeze povrce", "mladi luk", "luk crveni", "luk zuti"]
+    },
+    {
+      "id": "ostalo",
+      "name": "Ostalo",
+      "food": false,
+      "keywords": []
+    }
+  ]
+}

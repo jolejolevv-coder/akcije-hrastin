@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="hr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>Akcije danas</title>
+  </head>
+  <body>
+    <header class="page-header">
+      <h1>Akcije danas</h1>
+      <p id="data-date" class="data-date"></p>
+      <p id="notice" class="notice" hidden></p>
+    </header>
+
+    <main id="app" hidden>
+      <nav id="tabs" class="choices tabs" aria-label="Prikaz"></nav>
+
+      <section id="view-watchlist" hidden>
+        <p id="watchlist-intro" class="result-count"></p>
+        <ul id="watchlist" class="deals"></ul>
+      </section>
+
+      <div id="view-deals">
+      <section class="panel" aria-labelledby="search-title">
+        <h2 id="search-title">Što tražite?</h2>
+        <div class="search-row">
+          <input id="search" type="search" inputmode="search" autocomplete="off"
+                 placeholder="npr. kava, mlijeko, ulje" aria-labelledby="search-title" />
+          <button id="search-clear" type="button" class="button">Obriši</button>
+        </div>
+      </section>
+
+      <section class="panel" aria-labelledby="chain-title">
+        <h2 id="chain-title">Trgovina</h2>
+        <div id="chain-buttons" class="choices"></div>
+      </section>
+
+      <section class="panel" aria-labelledby="category-title">
+        <h2 id="category-title">Vrsta proizvoda</h2>
+        <div id="category-buttons" class="choices"></div>
+      </section>
+
+      <section class="panel" aria-labelledby="sort-title">
+        <h2 id="sort-title">Poredaj</h2>
+        <div id="sort-buttons" class="choices"></div>
+      </section>
+
+      <p id="result-count" class="result-count" aria-live="polite"></p>
+      <ul id="deals" class="deals"></ul>
+      <div class="more-row">
+        <button id="show-more" type="button" class="button button-primary">Prikaži još</button>
+        <button id="to-top" type="button" class="button">Natrag na vrh</button>
+      </div>
+      </div>
+    </main>
+
+    <footer class="page-footer">
+      <p>Cijene su iz javnih cjenika trgovina, obrada cijene.dev. Prije kupnje provjerite cijenu u trgovini.</p>
+    </footer>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
