@@ -53,4 +53,4 @@ Phase C: Tab „Letci“ in der Seite.
 
 Beantwortet am 10.10.2026: zwei Zeilen zu je zwei Tabs, nur Wochenprospekte.
 
-* Offen: Liest der Lauf bei GitHub die Seiten der Ketten ebenso wie lokal, oder sperren die Ketten die Adressen von GitHub? Zeigt der erste Lauf nach dem Push.
+* Geklärt am 10.10.2026: Der erste Lauf bei GitHub hat Konzum, Lidl und Plodine gelesen wie lokal.
