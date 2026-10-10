@@ -1,13 +1,12 @@
 import { describe, expect, it } from "vitest";
 import {
-  ALL,
   countBestOffers,
-  countByCategory,
   dealsInCategories,
   DEFAULT_SELECTION,
   foodCategories,
   selectDeals,
   sortDeals,
+  summarizeRubrics,
 } from "./filter";
 import type { Category, Deal, WatchEntry, WatchOffer } from "./types";
 
@@ -100,20 +99,6 @@ describe("sortDeals", () => {
   });
 });
 
-describe("countByCategory", () => {
-  it("counts per category and ignores the chosen category", () => {
-    const counts = countByCategory(DEALS, { ...DEFAULT_SELECTION, categoryId: "kava" });
-    expect(counts.get("kava")).toBe(2);
-    expect(counts.get("osnovno")).toBe(1);
-  });
-
-  it("respects chain and search", () => {
-    const counts = countByCategory(DEALS, { ...DEFAULT_SELECTION, chainId: "konzum", categoryId: ALL });
-    expect(counts.get("kava")).toBe(1);
-    expect(counts.has("mlijecni")).toBe(false);
-  });
-});
-
 describe("food scope", () => {
   const categories: Category[] = [
     { id: "kava", name: "Kava i čaj", food: true },
@@ -170,5 +155,38 @@ describe("countBestOffers", () => {
 
   it("compares generic goods by unit price", () => {
     expect(countBestOffers(entry([offer("a", 3.19, 0.53), offer("b", 0.59, 0.59)], true))).toBe(1);
+  });
+});
+
+describe("summarizeRubrics", () => {
+  const categories: Category[] = [
+    { id: "kava", name: "Kava i čaj", food: true },
+    { id: "mlijecni", name: "Mlijeko, sir i jaja", food: true },
+    { id: "riba", name: "Riba", food: true },
+  ];
+
+  it("lists each category with its total and its best rows, biggest discount first", () => {
+    const rubrics = summarizeRubrics(DEALS, categories, DEFAULT_SELECTION, 1);
+    expect(rubrics.map((rubric) => [rubric.category.id, rubric.total])).toEqual([
+      ["kava", 2],
+      ["mlijecni", 1],
+    ]);
+    expect(names(rubrics[0].top)).toEqual(["Kava mljevena 250 g"]);
+  });
+
+  it("leaves out categories without deals", () => {
+    const rubrics = summarizeRubrics(DEALS, categories, DEFAULT_SELECTION, 5);
+    expect(rubrics.some((rubric) => rubric.category.id === "riba")).toBe(false);
+  });
+
+  it("respects the chosen chain", () => {
+    const rubrics = summarizeRubrics(DEALS, categories, { ...DEFAULT_SELECTION, chainId: "spar" }, 5);
+    expect(rubrics.map((rubric) => rubric.category.id)).toEqual(["mlijecni"]);
+  });
+
+  it("keeps the given category order", () => {
+    const reversed = [...categories].reverse();
+    const rubrics = summarizeRubrics(DEALS, reversed, DEFAULT_SELECTION, 5);
+    expect(rubrics.map((rubric) => rubric.category.id)).toEqual(["mlijecni", "kava"]);
   });
 });

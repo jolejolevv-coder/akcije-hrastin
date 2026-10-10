@@ -1,0 +1,116 @@
+{
+  "title": "Welche Richtung bekommt die Seite?",
+  "question": "Grundwelt ist gesetzt: ruhig und groß wie GOV.UK, dazu das gelbe Preisschild aus dem Prospekt. Das Los hat „Dnevni program“ zugeteilt. Behalten, eine andere Karte nehmen oder neu würfeln.",
+  "options": [
+    {
+      "id": "assigned",
+      "label": "Dnevni program",
+      "kicker": "THE ROLL",
+      "lineage": "Die Programmseite der Tageszeitung",
+      "thesis": "Die Aktionen des Tages als Programmseite: Rubriken statt Knöpfe, Zeilen statt Karten.",
+      "palette": ["#ffffff", "#0b0c0c", "#ffdd00", "#d4351c"],
+      "materials": ["Zeitungsspalten", "fette schwarze Linien", "gelbes Preisschild"],
+      "viewport": "Kopf mit ausgeschriebenem Datum, drei große Reiter, dann ein kurzes Inhaltsverzeichnis der Rubriken in zwei Spalten. Direkt darunter die erste Rubrik mit fünf Zeilen: Name links, Kette darunter, Preis rechts im gelben Schild.",
+      "risk": "Zeilen sind dichter als Karten. Lange Produktnamen werden am Handy eng und müssen umbrechen dürfen.",
+      "raised": [
+        {"from": "challenger-timetable", "raise": "Nur zwei Schriftgrößen auf der ganzen Seite. Rang entsteht durch Fettung, Großschreibung und Linien, nicht durch immer neue Größen."},
+        {"from": "challenger-annual", "raise": "Eine einzige Schrift für alles, vom Datum bis zur Fußzeile."},
+        {"from": "challenger-jcard", "raise": "Jede Rubrik hat ein festes Maß: fünf Zeilen, dann ein klarer Knopf für alle. Keine Rubrik läuft über."}
+      ],
+      "wireframe": {"cols": 6, "rows": 12, "regions": [
+        {"label": "Datum", "x": 0, "y": 0, "w": 6, "h": 1},
+        {"label": "3 Reiter", "x": 0, "y": 1, "w": 6, "h": 1, "accent": true},
+        {"label": "Rubriken, 2 Spalten", "x": 0, "y": 2, "w": 6, "h": 3},
+        {"label": "MESO", "x": 0, "y": 5, "w": 6, "h": 1, "accent": true},
+        {"label": "Zeile: Name", "x": 0, "y": 6, "w": 4, "h": 1},
+        {"label": "Preis", "x": 4, "y": 6, "w": 2, "h": 1, "accent": true},
+        {"label": "Zeile: Name", "x": 0, "y": 7, "w": 4, "h": 1},
+        {"label": "Preis", "x": 4, "y": 7, "w": 2, "h": 1, "accent": true},
+        {"label": "Zeile: Name", "x": 0, "y": 8, "w": 4, "h": 1},
+        {"label": "Preis", "x": 4, "y": 8, "w": 2, "h": 1, "accent": true},
+        {"label": "Sve iz rubrike", "x": 0, "y": 9, "w": 6, "h": 1},
+        {"label": "MLIJEKO", "x": 0, "y": 10, "w": 6, "h": 1, "accent": true},
+        {"label": "Zeile", "x": 0, "y": 11, "w": 6, "h": 1}
+      ]}
+    },
+    {
+      "id": "model-pick",
+      "label": "Regalna etiketa",
+      "kicker": "IMPECCABLE’S PICK",
+      "lineage": "Das Preisetikett an der Regalkante",
+      "thesis": "Jede Aktion ist ein Regaletikett, jede Warengruppe ein Gangschild.",
+      "palette": ["#ffffff", "#111111", "#ffd500", "#d4351c", "#f3f2f1"],
+      "materials": ["Etikettenkarton", "Gangschilder", "schwarzer Balken"],
+      "viewport": "Datum, drei Reiter, dann die Warengruppen als wenige große Gangschilder. Darunter Etiketten in voller Breite: Preis riesig links auf Gelb, Name und Kette rechts auf Weiß.",
+      "risk": "Auch die Richtung, bei der die meisten Entwürfe für Supermärkte landen. Viele gelbe Flächen wirken schnell unruhig.",
+      "wireframe": {"cols": 6, "rows": 12, "regions": [
+        {"label": "Datum", "x": 0, "y": 0, "w": 6, "h": 1},
+        {"label": "3 Reiter", "x": 0, "y": 1, "w": 6, "h": 1, "accent": true},
+        {"label": "Gangschild", "x": 0, "y": 2, "w": 3, "h": 2},
+        {"label": "Gangschild", "x": 3, "y": 2, "w": 3, "h": 2},
+        {"label": "Preis", "x": 0, "y": 4, "w": 2, "h": 2, "accent": true},
+        {"label": "Name, Kette", "x": 2, "y": 4, "w": 4, "h": 2},
+        {"label": "Preis", "x": 0, "y": 6, "w": 2, "h": 2, "accent": true},
+        {"label": "Name, Kette", "x": 2, "y": 6, "w": 4, "h": 2},
+        {"label": "Preis", "x": 0, "y": 8, "w": 2, "h": 2, "accent": true},
+        {"label": "Name, Kette", "x": 2, "y": 8, "w": 4, "h": 2},
+        {"label": "Preis", "x": 0, "y": 10, "w": 2, "h": 2, "accent": true},
+        {"label": "Name, Kette", "x": 2, "y": 10, "w": 4, "h": 2}
+      ]}
+    },
+    {
+      "id": "challenger-timetable",
+      "label": "Taschenfahrplan",
+      "verdict": "declined",
+      "lineage": "Flugplan im Taschenformat, 1971",
+      "thesis": "Alle Aktionen als geneigte Fahrplanspalten in einer einzigen Schriftgröße.",
+      "palette": ["#e0a526", "#2b2f33", "#f4efe2", "#d8412f", "#2f6b4a"],
+      "materials": ["getöntes Glas", "goldgelbes Papier"],
+      "viewport": "Schräg gestellte Spalten auf gelbem Grund, je Kette eine Spalte.",
+      "case": "Ein Fahrplan ist vertraut, aber die Schräge und das seitliche Wandern kosten einen älteren Leser Lesbarkeit.",
+      "kept": "Rang durch Fettung und Linien statt durch viele Schriftgrößen.",
+      "risk": "Schräge Flächen und seitliches Blättern sind für den Leser eine Hürde.",
+      "hero": "https://impeccable.style/worlds/cards/rw-timetable-slide-rack-hero.webp"
+    },
+    {
+      "id": "challenger-annual",
+      "label": "Bildtafel",
+      "verdict": "declined",
+      "lineage": "Tafelteil eines Gestaltungsjahrbuchs",
+      "thesis": "Jede Aktion als Druckbogen mit Passkreuzen und Stempel.",
+      "palette": ["#f5f4f6", "#16181a", "#dcddf3", "#c9c7c4"],
+      "materials": ["ungestrichenes Papier", "Haarlinien", "Passkreuze"],
+      "viewport": "Fast weißer Bogen, große Überschrift, vier Tafeln in einer Reihe.",
+      "case": "Sehr feine Linien und kleine Beschriftungen in 11 px widersprechen der Lesbarkeit, die hier alles entscheidet.",
+      "kept": "Eine einzige Schrift für die ganze Seite.",
+      "risk": "Zu leise und zu klein für diesen Leser.",
+      "hero": "https://impeccable.style/worlds/cards/design-annual-s-plate-section-hero.webp"
+    },
+    {
+      "id": "challenger-jcard",
+      "label": "Kassettenhülle",
+      "verdict": "declined",
+      "lineage": "Handbeschriftete Einlegekarte einer Kassette",
+      "thesis": "Zwei Seiten, A und B, jede mit einer Liste, die genau passt.",
+      "palette": ["#ffffff", "#1f3fa8", "#8a8a8a", "#c8102e"],
+      "materials": ["liniertes Papier", "Kugelschreiber"],
+      "viewport": "Liniertes Blatt, Seite A Lebensmittel, Seite B alles andere.",
+      "case": "Handschrift ist schwerer lesbar als Druck, und 5700 Aktionen passen auf keine Kassette.",
+      "kept": "Feste Länge je Abschnitt, nichts läuft über.",
+      "risk": "Handschrift und Lesbarkeit schließen sich hier aus.",
+      "hero": "https://impeccable.style/worlds/cards/vernacular-ephemera-cassette-j-card-hero.webp"
+    }
+  ],
+  "reroll": {"registers": ["safer", "bolder"]},
+  "buildPath": {"value": "code", "toggle": false},
+  "canon": true,
+  "canonCard": {
+    "label": "Der Standard: Prospekt App",
+    "thesis": "Kachelraster mit Filterchips, wie die bekannten Prospekt Apps.",
+    "palette": ["#ffffff", "#111827", "#e11d48", "#f59e0b"],
+    "materials": ["Kacheln", "Chips", "bunte Banner"],
+    "viewport": "Suchfeld, eine Reihe Chips zum Wischen, darunter Kacheln in zwei Spalten.",
+    "risk": "Wischen und kleine Chips sind genau das, was ein älterer Leser schlecht bedient. Ohne Produktbilder bleiben die Kacheln leer."
+  },
+  "steer": true
+}

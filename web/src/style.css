@@ -1,21 +1,30 @@
-/* Built for an older reader: large type, strong contrast, big tap targets. */
+/*
+  Direction "Dnevni program": the programme page of a daily paper.
+  White sheet, black ink, thick rules above rubric heads, hairlines between rows.
+  One typeface and exactly two type sizes. Rank comes from weight, capitals and rules.
+  Yellow means one thing only: a real saving, or the best price in the watchlist.
+*/
 
 :root {
-  --color-page: #f5f2ea;
-  --color-surface: #ffffff;
-  --color-text: #1b1b1b;
-  --color-muted: #4a4a4a;
-  --color-border: #8a8578;
-  --color-primary: #0b3d6b;
-  --color-on-primary: #ffffff;
-  --color-discount: #a8001c;
-  --color-notice-bg: #fff1b8;
-  --color-notice-border: #8a6100;
-  --radius: 12px;
-  --tap-size: 56px;
-  --gap: 12px;
-  --page-width: 1000px;
+  --ink: #0b0c0c;
+  --ink-soft: #454d52;
+  --sheet: #ffffff;
+  --hairline: #9aa0a4;
+  --tag: #ffdd00;
+  --saving: #a8121d;
+  --focus: #ffdd00;
+
+  /* The only two type sizes on the page. */
+  --size-text: 1rem;
+  --size-large: 1.6rem;
+
+  --rule-thick: 4px;
+  --rule-thin: 1px;
+  --tap: 2.8rem; /* 56 px at the 20 px base */
   --gutter: 16px;
+  --gap: 12px;
+  --block-space: 28px;
+  --page-width: 1120px;
 }
 
 * {
@@ -23,19 +32,47 @@
 }
 
 html {
-  /* 125 % of the browser default, so the reader's own font setting still applies. */
+  /* 20 px base. Stays relative, so the reader's own browser font setting still applies. */
   font-size: 125%;
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
 }
 
 body {
   margin: 0;
-  background: var(--color-page);
-  color: var(--color-text);
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
-  line-height: 1.45;
+  background: var(--sheet);
+  color: var(--ink);
+  font-family: "Public Sans Variable", system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+  font-size: var(--size-text);
+  line-height: 1.4;
+  font-variant-numeric: tabular-nums;
+  caret-color: var(--ink);
 }
 
-.page-header,
+::selection {
+  background: var(--tag);
+  color: var(--ink);
+}
+
+h1,
+h2,
+h3,
+p,
+ul {
+  margin: 0;
+}
+
+ul {
+  padding: 0;
+  list-style: none;
+}
+
+.masthead,
 main,
 .page-footer {
   max-width: var(--page-width);
@@ -43,247 +80,374 @@ main,
   padding: 0 var(--gutter);
 }
 
-.page-header {
+/* Masthead: the title line of the paper. */
+
+.masthead {
   padding-top: 20px;
 }
 
-h1 {
-  margin: 0;
-  font-size: 2rem;
-  line-height: 1.2;
+.masthead h1 {
+  font-size: var(--size-large);
+  font-weight: 800;
+  line-height: 1.15;
 }
 
-h2 {
-  margin: 0 0 8px;
-  font-size: 1.15rem;
-}
-
-.data-date {
-  margin: 4px 0 0;
-  font-size: 1.05rem;
-  color: var(--color-muted);
+.masthead-date {
+  font-weight: 700;
+  text-wrap: balance;
+  padding-bottom: 12px;
+  border-bottom: var(--rule-thick) solid var(--ink);
 }
 
 .notice {
-  margin: 12px 0 0;
+  margin-top: 16px;
   padding: 12px 16px;
-  background: var(--color-notice-bg);
-  border: 2px solid var(--color-notice-border);
-  border-radius: var(--radius);
-  font-weight: 600;
+  border: var(--rule-thick) solid var(--ink);
+  font-weight: 700;
 }
 
-.panel {
-  margin-top: 20px;
+.lead {
+  margin-top: var(--block-space);
+  font-weight: 700;
+}
+
+/* Controls. Square corners, black frames, the selected one is printed solid. */
+
+button,
+input {
+  font: inherit;
+  color: var(--ink);
+  border-radius: 0;
+}
+
+.button,
+.choice {
+  min-height: var(--tap);
+  padding: 8px 6px;
+  font-weight: 700;
+  line-height: 1.2;
+  text-align: center;
+  background: var(--sheet);
+  border: 2px solid var(--ink);
+  cursor: pointer;
+}
+
+a.button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.choice[aria-pressed="true"],
+.button-strong {
+  color: var(--sheet);
+  background: var(--ink);
+}
+
+.button:hover,
+.choice:hover {
+  text-decoration: underline;
+  text-decoration-thickness: 3px;
+  text-underline-offset: 4px;
+}
+
+.button-wide {
+  display: block;
+  width: 100%;
+  margin-top: 16px;
+}
+
+button:focus-visible,
+input:focus-visible,
+a:focus-visible {
+  outline: 4px solid var(--focus);
+  outline-offset: 0;
+  box-shadow: inset 0 0 0 3px var(--ink);
+}
+
+.tabs {
+  display: grid;
+  /* minmax(0, 1fr) keeps the three columns equal, whatever the labels need. */
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.block {
+  margin-top: var(--block-space);
+}
+
+.label {
+  margin-bottom: 8px;
+  font-size: var(--size-text);
+  font-weight: 700;
+}
+
+.choice-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
 }
 
 .search-row {
   display: flex;
-  gap: var(--gap);
+  gap: 8px;
 }
 
 #search {
   flex: 1;
   min-width: 0;
-  min-height: var(--tap-size);
-  padding: 8px 14px;
-  font: inherit;
-  color: var(--color-text);
-  background: var(--color-surface);
-  border: 2px solid var(--color-border);
-  border-radius: var(--radius);
+  min-height: var(--tap);
+  padding: 8px 12px;
+  background: var(--sheet);
+  border: 2px solid var(--ink);
 }
 
-.choices {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--gap);
+#search::placeholder {
+  color: var(--ink-soft);
+  opacity: 1;
 }
 
-.button,
-.choice {
-  min-height: var(--tap-size);
-  padding: 8px 18px;
-  font: inherit;
-  font-weight: 600;
-  color: var(--color-text);
-  background: var(--color-surface);
-  border: 2px solid var(--color-border);
-  border-radius: var(--radius);
-  cursor: pointer;
-}
+/* Rubric index: the table of contents of the page. */
 
-.choice-selected,
-.button-primary {
-  color: var(--color-on-primary);
-  background: var(--color-primary);
-  border-color: var(--color-primary);
-}
-
-.choice:disabled {
-  color: var(--color-muted);
-  background: transparent;
-  border-style: dashed;
-  cursor: default;
-}
-
-button:focus-visible,
-input:focus-visible {
-  outline: 4px solid #e08a00;
-  outline-offset: 2px;
-}
-
-.result-count {
-  margin: 24px 0 12px;
-  font-size: 1.2rem;
-  font-weight: 700;
-}
-
-.deals {
+.index {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: var(--gap);
-  margin: 0;
-  padding: 0;
-  list-style: none;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: var(--gutter);
+  border-top: var(--rule-thin) solid var(--hairline);
 }
 
-.deal {
-  padding: 16px;
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius);
-}
-
-.deal-top {
+/* The hairline belongs to the grid cell, so it lines up across the columns. */
+.index li {
   display: flex;
-  flex-wrap: wrap;
+  border-bottom: var(--rule-thin) solid var(--hairline);
+}
+
+.index a {
+  flex: 1;
+  display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 8px;
-}
-
-.chain-badge,
-.discount-badge,
-.promotion-badge {
-  padding: 4px 12px;
-  border-radius: 999px;
+  min-height: var(--tap);
+  padding: 6px 0;
+  color: var(--ink);
   font-weight: 700;
+  line-height: 1.2;
+  text-decoration: none;
 }
 
-.chain-badge {
-  color: #ffffff;
-  background: var(--color-muted);
+/* Only the rubric name is underlined, not its number. */
+.index-name {
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 4px;
 }
 
-.chain-konzum { background: #b80d27; }
-.chain-lidl { background: #00459a; }
-.chain-kaufland { background: #2b2b2b; }
-.chain-plodine { background: #94400a; }
-.chain-spar { background: #00632f; }
-
-.discount-badge {
-  color: #ffffff;
-  background: var(--color-discount);
+.index a:hover .index-name {
+  text-decoration-thickness: 4px;
 }
 
-.promotion-badge {
-  color: var(--color-text);
-  border: 2px solid var(--color-border);
+.index-count {
+  font-weight: 400;
+  color: var(--ink-soft);
 }
 
-.deal-name {
-  margin: 12px 0 4px;
-  font-size: 1.15rem;
-  line-height: 1.3;
+/* A rubric: thick rule, uppercase head, rows. */
+
+.rubric {
+  margin-top: var(--block-space);
+  scroll-margin-top: 12px;
+}
+
+.rubric-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  padding: 10px 0 8px;
+  font-size: var(--size-text);
+  font-weight: 800;
+  line-height: 1.2;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  border-top: var(--rule-thick) solid var(--ink);
+  border-bottom: 2px solid var(--ink);
+}
+
+.rubric-count {
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+  white-space: nowrap;
+}
+
+#sort-block {
+  margin-top: 16px;
+  margin-bottom: 8px;
+}
+
+/* Name and price tag share the first line. The details run full width below. */
+.row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-areas:
+    "name tag"
+    "details details";
+  align-items: start;
+  column-gap: 12px;
+  row-gap: 4px;
+  padding: 12px 0;
+  border-bottom: var(--rule-thin) solid var(--hairline);
+}
+
+.row-name {
+  grid-area: name;
+  /* A one line name sits level with the middle of the taller price tag. */
+  align-self: center;
+}
+
+.row .tag {
+  grid-area: tag;
+}
+
+.row-details {
+  grid-area: details;
+}
+
+.row-name {
+  font-size: var(--size-text);
+  font-weight: 700;
+  line-height: 1.25;
   overflow-wrap: anywhere;
 }
 
-.deal-price {
-  margin: 0;
-  font-size: 1.9rem;
+.row-line {
+  margin-top: 2px;
+}
+
+.row-saving {
   font-weight: 800;
-  line-height: 1.2;
+  color: var(--saving);
 }
 
-.deal-detail,
-.deal-stores {
-  margin: 4px 0 0;
-  font-size: 0.9rem;
-  color: var(--color-muted);
+.row-quiet {
+  color: var(--ink-soft);
 }
 
-.tabs {
-  margin-top: 20px;
-  padding-bottom: 16px;
-  border-bottom: 3px solid var(--color-primary);
-}
+/* The price tag from the flyer. Yellow only for a real saving, framed otherwise. */
 
-.tabs .choice {
-  flex: 1 1 auto;
-  font-size: 1.1rem;
-}
-
-.watch-name {
-  margin: 0 0 8px;
-  font-size: 1.25rem;
-  line-height: 1.3;
-}
-
-.watch-offers {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.watch-offer {
-  padding: 10px 0;
-  border-top: 1px solid var(--color-border);
-}
-
-.watch-offer-best {
-  margin: 0 -8px;
-  padding: 10px 8px;
-  background: #e6f2e6;
-  border: 2px solid #1d6b2a;
-  border-radius: var(--radius);
-}
-
-.watch-offer-best + .watch-offer {
-  border-top: none;
-}
-
-.watch-price {
-  font-size: 1.5rem;
+.tag {
+  min-width: 5.4ch;
+  padding: 4px 8px;
+  font-size: var(--size-large);
   font-weight: 800;
+  line-height: 1.1;
+  text-align: right;
+  white-space: nowrap;
+  border: 2px solid var(--ink);
 }
 
-.watch-badges {
-  margin: 4px 0 0;
+.tag-saving {
+  background: var(--tag);
+}
+
+/* Watchlist: the shop is the lead of the row. */
+
+.row-shop {
   font-weight: 700;
-  color: var(--color-discount);
 }
 
-.more-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--gap);
-  margin: 20px 0;
+/* The buttons that close a rubric: open it in full, or jump back to the index. */
+.rubric-actions {
+  display: grid;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.rubric-actions .button-wide {
+  margin-top: 0;
+}
+
+#back {
+  margin-bottom: 20px;
 }
 
 .page-footer {
-  padding-top: 12px;
+  margin-top: 40px;
   padding-bottom: 32px;
-  font-size: 0.85rem;
-  color: var(--color-muted);
+  color: var(--ink-soft);
+}
+
+/* The rule sits on the paragraph, so it keeps the same margins as every other rule. */
+.page-footer p {
+  padding-top: 12px;
+  border-top: var(--rule-thick) solid var(--ink);
+}
+
+#to-top {
+  margin-top: var(--block-space);
 }
 
 [hidden] {
   display: none !important;
 }
 
-@media (min-width: 760px) {
-  .deals {
-    grid-template-columns: 1fr 1fr;
+/* Very narrow phones: long rubric names need the full width. */
+@media (max-width: 399px) {
+  .index {
+    grid-template-columns: minmax(0, 1fr);
   }
+}
+
+/* Wider screens: the sheet gets columns, like the paper it comes from. */
+
+@media (min-width: 620px) {
+  .choice-grid {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+
+  #sort-buttons {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .index {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .rubric-actions {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 900px) {
+  .rubric-columns,
+  #watchlist {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 40px;
+    align-items: start;
+  }
+
+  .index {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  #top-deals,
+  #deals {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 40px;
+  }
+
+  .button-wide {
+    width: auto;
+    min-width: 320px;
+  }
+}
+
+#index-title {
+  scroll-margin-top: 12px;
 }

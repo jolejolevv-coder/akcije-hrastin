@@ -57,7 +57,7 @@ Danach den Collector neu laufen lassen.
 
 ## Seite
 
-Vite plus TypeScript ohne Framework, im Ordner `web`. Braucht Node 20 oder neuer und eine vorhandene `data/akcije.json`.
+Vite plus TypeScript ohne Framework, im Ordner `web`. Aussehen und Regeln stehen in `DESIGN.md`, der Produktrahmen in `PRODUCT.md`. Braucht Node 20 oder neuer und eine vorhandene `data/akcije.json`.
 
 ```bash
 npm --prefix web install

@@ -1,22 +1,34 @@
 // Page wiring: load the data, keep the current selection, redraw on every change.
 
+import "@fontsource-variable/public-sans";
 import "./style.css";
 import {
   ALL,
-  countByCategory,
   dealsInCategories,
   DEFAULT_SELECTION,
   foodCategories,
   selectDeals,
+  summarizeRubrics,
   type Selection,
   type SortOrder,
 } from "./filter";
 import { ageInDays, formatDate } from "./format";
-import { categoryLabel, inDisplayOrder, renderChoices, renderDeals, renderWatchlist, type Choice } from "./render";
+import {
+  inDisplayOrder,
+  renderChoices,
+  renderRows,
+  renderRubricIndex,
+  renderRubrics,
+  renderWatchlist,
+  type Choice,
+} from "./render";
 import { dealCountLabel, TEXT } from "./text";
 import type { Category, Chain, Deal, DealsDocument } from "./types";
 
 const DATA_URL = "./data/akcije.json";
+/** Rows shown under each rubric on the overview. */
+const ROWS_PER_RUBRIC = 5;
+/** Rows added per step in the full list of one rubric or of a search. */
 const PAGE_SIZE = 30;
 /** Data from yesterday is normal in the morning. Warn only if it is older. */
 const MAX_NORMAL_AGE_DAYS = 1;
@@ -94,13 +106,31 @@ function changeTab(tab: Tab): void {
   render();
 }
 
+/** Open the full list of one rubric and bring its head into view. */
+function openRubric(categoryId: string): void {
+  changeSelection({ categoryId });
+  element("listing").scrollIntoView();
+}
+
+/** Leave the full list and return to the overview of all rubrics. */
+function closeListing(): void {
+  element<HTMLInputElement>("search").value = "";
+  changeSelection({ categoryId: ALL, searchText: "", sortOrder: DEFAULT_SELECTION.sortOrder });
+}
+
 /** Categories offered in the current tab: food only, or everything. */
 function categoriesInTab(): Category[] {
-  return activeTab === "food" ? foodCategories(documentData.categories) : documentData.categories;
+  const categories = activeTab === "food" ? foodCategories(documentData.categories) : documentData.categories;
+  return inDisplayOrder(categories);
 }
 
 function dealsInTab(): Deal[] {
   return dealsInCategories(documentData.deals, categoriesInTab());
+}
+
+/** The full list is shown while the reader searches or has opened one rubric. */
+function showsListing(): boolean {
+  return selection.searchText.trim() !== "" || selection.categoryId !== ALL;
 }
 
 function render(): void {
@@ -114,11 +144,15 @@ function render(): void {
     return;
   }
   renderChainButtons();
-  renderCategoryButtons();
-  renderChoices(element("sort-buttons"), SORT_CHOICES, selection.sortOrder, (id) =>
-    changeSelection({ sortOrder: id as SortOrder }),
-  );
-  renderResults();
+  const listing = showsListing();
+  element("top-rubric").hidden = listing;
+  element("overview").hidden = listing;
+  element("listing").hidden = !listing;
+  if (listing) {
+    renderListing();
+  } else {
+    renderOverview();
+  }
 }
 
 function renderChainButtons(): void {
@@ -129,29 +163,41 @@ function renderChainButtons(): void {
   renderChoices(element("chain-buttons"), choices, selection.chainId, (id) => changeSelection({ chainId: id }));
 }
 
-function renderCategoryButtons(): void {
-  const counts = countByCategory(dealsInTab(), selection);
-  const total = [...counts.values()].reduce((sum, count) => sum + count, 0);
-  const choices: Choice[] = [
-    { id: ALL, label: TEXT.allCategories, count: total },
-    ...inDisplayOrder(categoriesInTab()).map((category) => ({
-      id: category.id,
-      label: categoryLabel(category.id, category.name),
-      count: counts.get(category.id) ?? 0,
-    })),
-  ];
-  renderChoices(element("category-buttons"), choices, selection.categoryId, (id) =>
-    changeSelection({ categoryId: id }),
-  );
+/** Overview: the biggest savings of the day, the index and every rubric with its best rows. */
+function renderOverview(): void {
+  const deals = dealsInTab();
+  const best = selectDeals(deals, { ...selection, sortOrder: "discount" }).slice(0, ROWS_PER_RUBRIC);
+  element("top-title-text").textContent = TEXT.topToday;
+  renderRows(element("top-deals"), best, chainsById, false);
+  const rubrics = summarizeRubrics(deals, categoriesInTab(), selection, ROWS_PER_RUBRIC);
+  renderRubricIndex(element("rubric-index"), rubrics);
+  renderRubrics(element("rubrics"), rubrics, chainsById, openRubric);
 }
 
-function renderResults(): void {
+/** Full list: all deals of one rubric, or all search results, with sorting. */
+function renderListing(): void {
   const matching = selectDeals(dealsInTab(), selection);
-  const resultCount = element("result-count");
-  resultCount.textContent = matching.length === 0 ? TEXT.noResults : dealCountLabel(matching.length);
-  renderDeals(element("deals"), matching.slice(0, visibleCount), chainsById);
+  const isEmpty = matching.length === 0;
+  element("back").textContent = TEXT.backToRubrics;
+  element("listing-title-text").textContent = listingTitle();
+  element("listing-count").textContent = isEmpty ? "" : dealCountLabel(matching.length);
+  element("no-results").textContent = TEXT.noResults;
+  element("no-results").hidden = !isEmpty;
+  element("sort-block").hidden = isEmpty;
+  renderChoices(element("sort-buttons"), SORT_CHOICES, selection.sortOrder, (id) =>
+    changeSelection({ sortOrder: id as SortOrder }),
+  );
+  renderRows(element("deals"), matching.slice(0, visibleCount), chainsById, true);
   element("show-more").hidden = matching.length <= visibleCount;
-  element("to-top").hidden = matching.length === 0;
+}
+
+function listingTitle(): string {
+  const searchText = selection.searchText.trim();
+  if (searchText !== "") {
+    return `${TEXT.resultsFor} „${searchText}“`;
+  }
+  const category = documentData.categories.find((entry) => entry.id === selection.categoryId);
+  return category?.name ?? "";
 }
 
 function wireControls(): void {
@@ -166,9 +212,10 @@ function wireControls(): void {
     changeSelection({ searchText: "" });
     search.focus();
   });
+  element("back").addEventListener("click", closeListing);
   element("show-more").addEventListener("click", () => {
     visibleCount += PAGE_SIZE;
-    renderResults();
+    renderListing();
   });
   element("to-top").addEventListener("click", () => window.scrollTo({ top: 0 }));
 }
@@ -180,6 +227,8 @@ async function start(): Promise<void> {
     console.error(error);
     showNotice(TEXT.loadError);
     return;
+  } finally {
+    element("loading").hidden = true;
   }
   chainsById = new Map(documentData.chains.map((chain) => [chain.id, chain]));
   renderHeader();

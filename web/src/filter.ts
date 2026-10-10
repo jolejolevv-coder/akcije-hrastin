@@ -46,14 +46,31 @@ export function dealsInCategories(deals: Deal[], categories: Category[]): Deal[]
   return deals.filter((deal) => allowedIds.has(deal.category));
 }
 
-/** How many deals each category has for the chosen chain and search text. */
-export function countByCategory(deals: Deal[], selection: Selection): Map<string, number> {
-  const withoutCategory = selectDeals(deals, { ...selection, categoryId: ALL });
-  const counts = new Map<string, number>();
-  for (const deal of withoutCategory) {
-    counts.set(deal.category, (counts.get(deal.category) ?? 0) + 1);
+/** One rubric of the overview: its category, how many deals it has and its best rows. */
+export interface RubricSummary {
+  category: Category;
+  total: number;
+  top: Deal[];
+}
+
+/**
+ * Build the overview: for each category the deals with the biggest discount.
+ * Categories without any deal for the chosen chain are left out.
+ */
+export function summarizeRubrics(
+  deals: Deal[],
+  categories: Category[],
+  selection: Selection,
+  rowsPerRubric: number,
+): RubricSummary[] {
+  const summaries: RubricSummary[] = [];
+  for (const category of categories) {
+    const matching = selectDeals(deals, { ...selection, categoryId: category.id, sortOrder: "discount" });
+    if (matching.length > 0) {
+      summaries.push({ category, total: matching.length, top: matching.slice(0, rowsPerRubric) });
+    }
   }
-  return counts;
+  return summaries;
 }
 
 export function sortDeals(deals: Deal[], sortOrder: SortOrder): Deal[] {

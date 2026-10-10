@@ -7,51 +7,71 @@
     <title>Akcije danas</title>
   </head>
   <body>
-    <header class="page-header">
+    <!--
+      DIRECTION CONTRACT
+      THESIS: The day's promotions set like the programme page of a daily paper. Rubrics and rows, not filter chips and cards.
+      OWN-WORLD: White sheet, black ink, thick black rules above uppercase rubric heads, hairlines between rows, one typeface, two type sizes. Yellow price tag only for a real saving, and in the watchlist for the cheapest shop.
+      STORY: The reader opens the page, sees today's date and the biggest savings at once, jumps to a rubric, reads name and price, goes shopping.
+      FIRST VIEWPORT: Title and written out date, three tabs, then the rubric "Najveći popusti danas" with rows: name left, price tag right. Shop filter and search follow below it.
+      FORM: Newspaper programme page, candidate 3 of 7, seed 2cb62abd.
+      FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance
+    -->
+    <header class="masthead">
       <h1>Akcije danas</h1>
-      <p id="data-date" class="data-date"></p>
+      <p id="data-date" class="masthead-date"></p>
+      <p id="loading" class="lead">Učitavanje cijena…</p>
       <p id="notice" class="notice" hidden></p>
     </header>
 
     <main id="app" hidden>
-      <nav id="tabs" class="choices tabs" aria-label="Prikaz"></nav>
+      <nav id="tabs" class="tabs" aria-label="Prikaz"></nav>
 
       <section id="view-watchlist" hidden>
-        <p id="watchlist-intro" class="result-count"></p>
-        <ul id="watchlist" class="deals"></ul>
+        <p id="watchlist-intro" class="lead"></p>
+        <div id="watchlist"></div>
       </section>
 
       <div id="view-deals">
-      <section class="panel" aria-labelledby="search-title">
-        <h2 id="search-title">Što tražite?</h2>
-        <div class="search-row">
-          <input id="search" type="search" inputmode="search" autocomplete="off"
-                 placeholder="npr. kava, mlijeko, ulje" aria-labelledby="search-title" />
-          <button id="search-clear" type="button" class="button">Obriši</button>
+        <section id="top-rubric" class="rubric" aria-labelledby="top-title">
+          <h2 id="top-title" class="rubric-head"><span id="top-title-text"></span></h2>
+          <ul id="top-deals" class="rows"></ul>
+        </section>
+
+        <section class="block" aria-labelledby="chain-title">
+          <h2 id="chain-title" class="label">Trgovina</h2>
+          <div id="chain-buttons" class="choice-grid"></div>
+        </section>
+
+        <section class="block" aria-labelledby="search-title">
+          <h2 id="search-title" class="label">Traži proizvod</h2>
+          <div class="search-row">
+            <input id="search" type="search" inputmode="search" autocomplete="off"
+                   placeholder="npr. kava, mlijeko" aria-labelledby="search-title" />
+            <button id="search-clear" type="button" class="button">Obriši</button>
+          </div>
+        </section>
+
+        <div id="overview">
+          <nav class="block" aria-labelledby="index-title">
+            <h2 id="index-title" class="label">Rubrike</h2>
+            <ul id="rubric-index" class="index"></ul>
+          </nav>
+          <div id="rubrics" class="rubric-columns"></div>
         </div>
-      </section>
 
-      <section class="panel" aria-labelledby="chain-title">
-        <h2 id="chain-title">Trgovina</h2>
-        <div id="chain-buttons" class="choices"></div>
-      </section>
+        <section id="listing" class="rubric" hidden aria-labelledby="listing-title">
+          <button id="back" type="button" class="button button-wide"></button>
+          <h2 id="listing-title" class="rubric-head"><span id="listing-title-text"></span><span id="listing-count" class="rubric-count"></span></h2>
+          <p id="no-results" class="lead" hidden></p>
+          <div id="sort-block">
+            <p class="label" id="sort-title">Poredaj</p>
+            <div id="sort-buttons" class="choice-grid" role="group" aria-labelledby="sort-title"></div>
+          </div>
+          <ul id="deals" class="rows"></ul>
+          <button id="show-more" type="button" class="button button-wide button-strong">Prikaži još</button>
+        </section>
 
-      <section class="panel" aria-labelledby="category-title">
-        <h2 id="category-title">Vrsta proizvoda</h2>
-        <div id="category-buttons" class="choices"></div>
-      </section>
-
-      <section class="panel" aria-labelledby="sort-title">
-        <h2 id="sort-title">Poredaj</h2>
-        <div id="sort-buttons" class="choices"></div>
-      </section>
-
-      <p id="result-count" class="result-count" aria-live="polite"></p>
-      <ul id="deals" class="deals"></ul>
-      <div class="more-row">
-        <button id="show-more" type="button" class="button button-primary">Prikaži još</button>
-        <button id="to-top" type="button" class="button">Natrag na vrh</button>
-      </div>
+        <button id="to-top" type="button" class="button button-wide">Natrag na vrh</button>
       </div>
     </main>
 

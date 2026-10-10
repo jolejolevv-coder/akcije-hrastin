@@ -1,6 +1,6 @@
 # Roadmap
 
-Stand 10.10.2026: Phase 0 bis 4 fertig. Die Seite ist online unter https://me.nahobinoco.com/akcije-hrastin/ und wird zweimal täglich neu gebaut. Offen: DNS Eintrag für die Subdomain akcije, echte Produkte für die Merkliste, Rückmeldung des Lesers.
+Stand 10.10.2026: Phase 0 bis 4 fertig, die Seite ist online, seit dem Abend des 10.10. im Aussehen „Dnevni program“. Offen sind nur noch Dinge, die der Nutzer selbst tun muss: Link an den Leser geben, echte Produkte für die Merkliste nennen, optional der DNS Eintrag für die Subdomain.
 
 Entschieden: Einzugsgebiet nur Osijek und Čepin, öffentliches Repo ist in Ordnung.
 
@@ -124,6 +124,35 @@ Offen:
 1. Was lief gut? Erster Lauf sofort grün. Die Abbruchlogik brauchte keinen eigenen Code, weil der Collector schon mit Fehlercode endet.
 2. Wo lag die Annahme falsch? Der Abruf des Preisverlaufs folgte keinen Weiterleitungen. Pages liefert die Basisadresse mit http, die Seite antwortet mit einer Weiterleitung auf https. Der erste Lauf fiel deshalb still auf den Startwert zurück. Aufgefallen nur, weil ich die Logzeile gelesen habe. Außerdem liegt die Seite wegen der bestehenden Domain des Kontos unter me.nahobinoco.com und nicht unter github.io.
 3. Was besser spezifizieren? Stille Rückfälle brauchen ein sichtbares Signal. Für später: der Lauf soll eine Warnung in die Zusammenfassung schreiben, wenn er den Startwert nimmt.
+
+## Umbau des Aussehens mit den Skills website-bauen und impeccable (10.10.2026, freigegeben und online)
+
+Auslöser: Der Nutzer hat den Skill `website-bauen` installieren und laufen lassen. Entschieden: verkürzte Fassung (Referenzen, Design-Richtung, Bauen, Prüfen), kein DataForSEO, kein Chromium. Grundwelt GOV.UK Design System plus Preisschild aus dem Prospekt. Richtung „Dnevni program“, gewählt aus der Auswahl des Design-Skills.
+
+Gebaut, nur im Ordner `web`:
+
+* Aufbau wie die Programmseite einer Tageszeitung: Rubriken mit dicker Linie, Zeilen statt Karten, Preis rechts im Schild. Gelb nur bei echter Ersparnis und beim günstigsten Laden der Merkliste.
+* Erste Ansicht: Titel, Datum, drei Reiter, dann sofort „Najveći popusti danas“. Am Handy steht das erste Preisschild bei 301 px, vorher lagen bis zu 16 Knöpfe davor.
+* Darunter Ladenfilter, Suche, ein Inhaltsverzeichnis der Rubriken und je Rubrik fünf Zeilen mit einem Knopf für alle und einem Rücksprung.
+* Eine Schrift (Public Sans, selbst gehostet, OFL), zwei Größen (20 und 32 px), keine Emojis mehr.
+* Neu: Ladezeile, bis die Daten da sind.
+
+Geprüft: 36 Tests der Seite und 89 des Collectors grün, Build läuft. Im Browser bei 360, 375 und 1280 px ohne Konsolenfehler und ohne seitliches Scrollen. Unabhängiger Prüfer des Design-Skills: erster Durchgang acht Mängel, alle behoben, Urteil „ship“ für diese acht. `DESIGN.md` und `PRODUCT.md` liegen im Projekt.
+
+Nicht geprüft oder offen:
+
+* Tab „Sve akcije“, Rubrikende am PC, Fokus und Hover sind in keiner Aufnahme belegt.
+* Der Detektor des Design-Skills lief nur im eingeschränkten Modus.
+* Der einspaltige Rubrikindex am Handy ist rund 630 px hoch.
+* Neue Abhängigkeit `@fontsource-variable/public-sans`. Ohne Rückfrage gewählt, weil der Skill selbst gehostete Schriften verlangt. Atkinson Hyperlegible war der erste Versuch und fiel wegen der durchgestrichenen Null in den Preisen weg.
+* Die Namen der Farben und Regeln in `DESIGN.md` sind vom Dokumentierer gewählt und unbestätigt.
+* Kroatische Texte weiter ungeprüft, der Leser hat die Seite noch nicht gesehen.
+
+### Retrospektive Umbau
+
+1. Was lief gut? Der unabhängige Prüfer fand Dinge, die ich übersehen hatte: den Ladenfilter vor der ersten Aktion, verspringende Linien im Index, fehlenden Ladezustand. Die Trennung von Logik und Anzeige aus Phase 2 hat den Umbau auf zwei Dateien begrenzt.
+2. Wo lag die Annahme falsch? Meine erste Reihenfolge stellte sechs Ladenknöpfe vor die erste Aktion, obwohl genau das das bekannte Problem war. Die erste Schrift hatte eine durchgestrichene Null. Ein Teil meiner Aufnahmen für den Prüfer war veraltet und im falschen Maßstab, er hat sie zu Recht zurückgewiesen.
+3. Was besser spezifizieren? Der Skill `website-bauen` ist für Firmenseiten gebaut. Vier seiner neun Phasen passten nicht. Vor dem nächsten Einsatz zuerst klären, welche Phasen laufen. Und: Aufnahmen für eine Prüfung immer in einem Durchgang nach dem letzten Build.
 
 ## Später, nur nach Freigabe
 

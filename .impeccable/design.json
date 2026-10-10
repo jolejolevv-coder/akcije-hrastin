@@ -1,0 +1,172 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-10T15:45:00+02:00",
+  "title": "Design System: Akcije danas",
+  "extensions": {
+    "colorMeta": {
+      "tag": {
+        "role": "primary",
+        "displayName": "Prospektgelb",
+        "canonical": "#ffdd00",
+        "tonalRamp": ["oklch(20% 0.05 98)", "oklch(32% 0.08 98)", "oklch(45% 0.11 98)", "oklch(58% 0.14 98)", "oklch(72% 0.17 98)", "oklch(84% 0.18 98)", "oklch(90% 0.18 98)", "oklch(96% 0.07 98)"]
+      },
+      "saving": {
+        "role": "secondary",
+        "displayName": "Rotstift",
+        "canonical": "#a8121d",
+        "tonalRamp": ["oklch(18% 0.07 25)", "oklch(30% 0.12 25)", "oklch(40% 0.16 25)", "oklch(46% 0.18 25)", "oklch(58% 0.18 25)", "oklch(72% 0.12 25)", "oklch(86% 0.06 25)", "oklch(95% 0.02 25)"]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Druckerschwarz",
+        "canonical": "#0b0c0c",
+        "tonalRamp": ["oklch(15% 0.002 197)", "oklch(27% 0.002 197)", "oklch(39% 0.002 197)", "oklch(51% 0.002 197)", "oklch(63% 0.002 197)", "oklch(75% 0.002 197)", "oklch(87% 0.002 197)", "oklch(95% 0.002 197)"]
+      },
+      "ink-soft": {
+        "role": "neutral",
+        "displayName": "Graue Tinte",
+        "canonical": "#454d52",
+        "tonalRamp": ["oklch(15% 0.012 232)", "oklch(27% 0.012 232)", "oklch(41% 0.012 232)", "oklch(52% 0.012 232)", "oklch(64% 0.012 232)", "oklch(76% 0.012 232)", "oklch(88% 0.008 232)", "oklch(95% 0.005 232)"]
+      },
+      "hairline": {
+        "role": "neutral",
+        "displayName": "Haarlinie",
+        "canonical": "#9aa0a4",
+        "tonalRamp": ["oklch(15% 0.007 232)", "oklch(28% 0.007 232)", "oklch(42% 0.007 232)", "oklch(56% 0.007 232)", "oklch(70% 0.007 232)", "oklch(80% 0.007 232)", "oklch(89% 0.005 232)", "oklch(95% 0.003 232)"]
+      },
+      "sheet": {
+        "role": "neutral",
+        "displayName": "Blattweiß",
+        "canonical": "#ffffff",
+        "tonalRamp": ["oklch(15% 0 0)", "oklch(28% 0 0)", "oklch(42% 0 0)", "oklch(56% 0 0)", "oklch(70% 0 0)", "oklch(82% 0 0)", "oklch(92% 0 0)", "oklch(100% 0 0)"]
+      }
+    },
+    "typographyMeta": {
+      "headline": { "displayName": "Headline", "purpose": "Der Seitentitel „Akcije danas“. Einmal pro Seite." },
+      "price": { "displayName": "Price", "purpose": "Der Preis im Preisschild. Die einzige weitere Stelle mit der großen Größe." },
+      "rubric-head": { "displayName": "Rubric Head", "purpose": "Kopf einer Rubrik, in Versalien mit 0.03em Sperrung." },
+      "title": { "displayName": "Title", "purpose": "Produktname, Kettenname, Datumszeile, Beschriftungen, Text in Buttons, Links im Rubrikenverzeichnis." },
+      "body": { "displayName": "Body", "purpose": "Nebenzeilen, Zähler, Suchtext, Fußzeile." }
+    },
+    "shadows": [
+      { "name": "focus-inner-ring", "value": "inset 0 0 0 3px #0b0c0c", "purpose": "Innerer schwarzer Ring des Focus Zustands, zusammen mit outline 4px solid #ffdd00. Kein Tiefeneffekt." }
+    ],
+    "motion": [
+      { "name": "scroll-smooth", "value": "scroll-behavior: smooth", "purpose": "Weiches Scrollen zu Sprungzielen, abgeschaltet bei prefers-reduced-motion. Sonst keine Bewegung." }
+    ],
+    "breakpoints": [
+      { "name": "narrow-max", "value": "399px" },
+      { "name": "wide", "value": "620px" },
+      { "name": "columns", "value": "900px" }
+    ],
+    "rules": [
+      { "name": "rule-thick", "value": "4px solid #0b0c0c", "purpose": "Über Rubrikkopf, unter der Datumszeile, über der Fußzeile, Rahmen des Hinweiskastens." },
+      { "name": "frame", "value": "2px solid #0b0c0c", "purpose": "Rahmen von Buttons, Auswahlfeldern, Suchfeld, Preisschild, Linie unter dem Rubrikkopf." },
+      { "name": "rule-thin", "value": "1px solid #9aa0a4", "purpose": "Trennlinie unter jeder Zeile und im Rubrikenverzeichnis." }
+    ]
+  },
+  "components": [
+    {
+      "name": "Button",
+      "kind": "button",
+      "refersTo": "button",
+      "description": "Standardbutton für Nebenhandlungen wie Löschen und Zurückspringen.",
+      "html": "<button type=\"button\" class=\"ds-button\">Natrag na vrh</button>",
+      "css": ".ds-button { min-height: 56px; padding: 8px 6px; font-family: 'Public Sans Variable', system-ui, -apple-system, 'Segoe UI', Arial, sans-serif; font-size: 20px; font-weight: 700; line-height: 1.2; text-align: center; color: var(--ink, #0b0c0c); background: var(--sheet, #ffffff); border: 2px solid var(--ink, #0b0c0c); border-radius: 0; cursor: pointer; min-width: 240px; } .ds-button:hover { text-decoration: underline; text-decoration-thickness: 3px; text-underline-offset: 4px; } .ds-button:focus-visible { outline: 4px solid var(--focus, #ffdd00); outline-offset: 0; box-shadow: inset 0 0 0 3px var(--ink, #0b0c0c); }"
+    },
+    {
+      "name": "Strong Button",
+      "kind": "button",
+      "refersTo": "button-strong",
+      "description": "Die eine weiterführende Handlung einer Ansicht, schwarz gedruckt.",
+      "html": "<button type=\"button\" class=\"ds-button-strong\">Prikaži još</button>",
+      "css": ".ds-button-strong { min-height: 56px; padding: 8px 6px; font-family: 'Public Sans Variable', system-ui, -apple-system, 'Segoe UI', Arial, sans-serif; font-size: 20px; font-weight: 700; line-height: 1.2; text-align: center; color: var(--sheet, #ffffff); background: var(--ink, #0b0c0c); border: 2px solid var(--ink, #0b0c0c); border-radius: 0; cursor: pointer; min-width: 240px; } .ds-button-strong:hover { text-decoration: underline; text-decoration-thickness: 3px; text-underline-offset: 4px; } .ds-button-strong:focus-visible { outline: 4px solid var(--focus, #ffdd00); outline-offset: 0; box-shadow: inset 0 0 0 3px var(--ink, #0b0c0c); }"
+    },
+    {
+      "name": "Choices (Tabs)",
+      "kind": "nav",
+      "refersTo": "choice",
+      "description": "Raster gleich breiter Auswahlfelder, genau eines ist gewählt. Dient als Tabs, Kettenfilter und Sortierung.",
+      "html": "<div class=\"ds-choices\"><button type=\"button\" class=\"ds-choice\" aria-pressed=\"true\">Hrana i piće</button><button type=\"button\" class=\"ds-choice\" aria-pressed=\"false\">Moj popis</button><button type=\"button\" class=\"ds-choice\" aria-pressed=\"false\">Sve akcije</button></div>",
+      "css": ".ds-choices { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; max-width: 360px; } .ds-choice { min-height: 56px; padding: 8px 6px; font-family: 'Public Sans Variable', system-ui, -apple-system, 'Segoe UI', Arial, sans-serif; font-size: 20px; font-weight: 700; line-height: 1.2; text-align: center; color: var(--ink, #0b0c0c); background: var(--sheet, #ffffff); border: 2px solid var(--ink, #0b0c0c); border-radius: 0; cursor: pointer; } .ds-choice[aria-pressed=\"true\"] { color: var(--sheet, #ffffff); background: var(--ink, #0b0c0c); } .ds-choice:hover { text-decoration: underline; text-decoration-thickness: 3px; text-underline-offset: 4px; } .ds-choice:focus-visible { outline: 4px solid var(--focus, #ffdd00); outline-offset: 0; box-shadow: inset 0 0 0 3px var(--ink, #0b0c0c); }"
+    },
+    {
+      "name": "Search Field",
+      "kind": "input",
+      "refersTo": "search-input",
+      "description": "Suchfeld mit Beschriftung darüber und Löschbutton in gleicher Höhe.",
+      "html": "<div class=\"ds-search\"><p class=\"ds-search-label\">Traži proizvod</p><div class=\"ds-search-row\"><input class=\"ds-search-input\" type=\"search\" placeholder=\"npr. kava, mlijeko\" /><button type=\"button\" class=\"ds-search-clear\">Obriši</button></div></div>",
+      "css": ".ds-search { max-width: 360px; font-family: 'Public Sans Variable', system-ui, -apple-system, 'Segoe UI', Arial, sans-serif; font-size: 20px; color: var(--ink, #0b0c0c); } .ds-search-label { margin: 0 0 8px; font-weight: 700; } .ds-search-row { display: flex; gap: 8px; } .ds-search-input { flex: 1; min-width: 0; min-height: 56px; padding: 8px 12px; font: inherit; color: var(--ink, #0b0c0c); background: var(--sheet, #ffffff); border: 2px solid var(--ink, #0b0c0c); border-radius: 0; } .ds-search-input::placeholder { color: var(--ink-soft, #454d52); opacity: 1; } .ds-search-clear { min-height: 56px; padding: 8px 6px; font: inherit; font-weight: 700; color: var(--ink, #0b0c0c); background: var(--sheet, #ffffff); border: 2px solid var(--ink, #0b0c0c); border-radius: 0; cursor: pointer; } .ds-search-clear:hover { text-decoration: underline; text-decoration-thickness: 3px; text-underline-offset: 4px; } .ds-search-input:focus-visible, .ds-search-clear:focus-visible { outline: 4px solid var(--focus, #ffdd00); outline-offset: 0; box-shadow: inset 0 0 0 3px var(--ink, #0b0c0c); }"
+    },
+    {
+      "name": "Rubric Index",
+      "kind": "nav",
+      "refersTo": "index-link",
+      "description": "Inhaltsverzeichnis der Rubriken: unterstrichener Name links, Zahl der Aktionen rechts, Haarlinien dazwischen.",
+      "html": "<ul class=\"ds-index\"><li><a href=\"#\"><span class=\"ds-index-name\">Meso i suhomesnato</span><span class=\"ds-index-count\">311</span></a></li><li><a href=\"#\"><span class=\"ds-index-name\">Kruh i peciva</span><span class=\"ds-index-count\">85</span></a></li></ul>",
+      "css": ".ds-index { margin: 0; padding: 0; list-style: none; max-width: 360px; border-top: 1px solid var(--hairline, #9aa0a4); font-family: 'Public Sans Variable', system-ui, -apple-system, 'Segoe UI', Arial, sans-serif; font-size: 20px; font-variant-numeric: tabular-nums; } .ds-index li { display: flex; border-bottom: 1px solid var(--hairline, #9aa0a4); } .ds-index a { flex: 1; display: flex; justify-content: space-between; align-items: center; gap: 8px; min-height: 56px; padding: 6px 0; color: var(--ink, #0b0c0c); font-weight: 700; line-height: 1.2; text-decoration: none; } .ds-index-name { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 4px; } .ds-index a:hover .ds-index-name { text-decoration-thickness: 4px; } .ds-index-count { font-weight: 400; color: var(--ink-soft, #454d52); } .ds-index a:focus-visible { outline: 4px solid var(--focus, #ffdd00); outline-offset: 0; box-shadow: inset 0 0 0 3px var(--ink, #0b0c0c); }"
+    },
+    {
+      "name": "Rubric with Rows and Price Tags",
+      "kind": "custom",
+      "refersTo": "rubric-head",
+      "description": "Das Kernmuster: dicke Linie, Kopf in Versalien, Zeilen mit Name links und Preisschild rechts. Gelbes Schild nur bei belegtem Vorteil.",
+      "html": "<section class=\"ds-rubric\"><h2 class=\"ds-rubric-head\"><span>Kava i čaj</span><span class=\"ds-rubric-count\">115</span></h2><ul class=\"ds-rows\"><li class=\"ds-row\"><h3 class=\"ds-row-name\">Kava Barcaffe 400 g</h3><p class=\"ds-tag ds-tag-saving\">4,99 €</p><div class=\"ds-row-details\"><p class=\"ds-row-line\"><span class=\"ds-row-shop\">Konzum</span> · <span class=\"ds-row-saving\">Popust 25 %</span></p><p class=\"ds-row-line ds-row-quiet\">Najniže u 30 dana: 6,65 €</p></div></li><li class=\"ds-row\"><h3 class=\"ds-row-name\">Čaj šipak 20 vrećica</h3><p class=\"ds-tag\">1,19 €</p><div class=\"ds-row-details\"><p class=\"ds-row-line\"><span class=\"ds-row-shop\">Spar</span></p></div></li></ul></section>",
+      "css": ".ds-rubric { max-width: 360px; font-family: 'Public Sans Variable', system-ui, -apple-system, 'Segoe UI', Arial, sans-serif; font-size: 20px; line-height: 1.4; font-variant-numeric: tabular-nums; color: var(--ink, #0b0c0c); background: var(--sheet, #ffffff); } .ds-rubric-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin: 0; padding: 10px 0 8px; font-size: 20px; font-weight: 800; line-height: 1.2; text-transform: uppercase; letter-spacing: 0.03em; border-top: 4px solid var(--ink, #0b0c0c); border-bottom: 2px solid var(--ink, #0b0c0c); } .ds-rubric-count { font-weight: 400; letter-spacing: 0; text-transform: none; white-space: nowrap; } .ds-rows { margin: 0; padding: 0; list-style: none; } .ds-row { display: grid; grid-template-columns: 1fr auto; grid-template-areas: 'name tag' 'details details'; align-items: start; column-gap: 12px; row-gap: 4px; padding: 12px 0; border-bottom: 1px solid var(--hairline, #9aa0a4); } .ds-row-name { grid-area: name; align-self: center; margin: 0; font-size: 20px; font-weight: 700; line-height: 1.25; overflow-wrap: anywhere; } .ds-tag { grid-area: tag; margin: 0; min-width: 5.4ch; padding: 4px 8px; font-size: 32px; font-weight: 800; line-height: 1.1; text-align: right; white-space: nowrap; border: 2px solid var(--ink, #0b0c0c); } .ds-tag-saving { background: var(--tag, #ffdd00); } .ds-row-details { grid-area: details; } .ds-row-line { margin: 2px 0 0; } .ds-row-shop { font-weight: 700; } .ds-row-saving { font-weight: 800; color: var(--saving, #a8121d); } .ds-row-quiet { color: var(--ink-soft, #454d52); }"
+    },
+    {
+      "name": "Notice",
+      "kind": "custom",
+      "refersTo": "notice",
+      "description": "Hinweiskasten für veraltete oder fehlende Daten. Dicker schwarzer Rahmen, keine Farbe, kein Icon.",
+      "html": "<p class=\"ds-notice\">Pažnja: ovo nisu današnje cijene. Novi podaci još nisu stigli.</p>",
+      "css": ".ds-notice { max-width: 360px; margin: 0; padding: 12px 16px; font-family: 'Public Sans Variable', system-ui, -apple-system, 'Segoe UI', Arial, sans-serif; font-size: 20px; font-weight: 700; line-height: 1.4; color: var(--ink, #0b0c0c); background: var(--sheet, #ffffff); border: 4px solid var(--ink, #0b0c0c); }"
+    }
+  ],
+  "narrative": {
+    "northStar": "Dnevni program",
+    "overview": "Die Seite ist die Programmseite einer Tageszeitung. Ein weißes Blatt, schwarze Farbe, ein Titel mit ausgeschriebenem Datum, darunter Rubriken. Jede Rubrik beginnt mit einem dicken schwarzen Balken und einem Kopf in Versalien, darunter stehen Zeilen, getrennt durch graue Haarlinien. Der Name steht links, das Preisschild rechts. Rang entsteht aus Schriftgewicht, Versalien und Linien, nicht aus Schriftgrößen, Flächen oder Schatten.\n\nDas System ist auf einen älteren Leser ausgelegt, der Prospekte kennt und keine App Muster. Deshalb ist alles groß, alles sichtbar und alles flach: Grundschrift 20 px, jede Tippfläche mindestens 56 px hoch, kein Menü, das erst aufgeklappt werden muss, kein dunkles Schema. Die Dichte ist die einer Liste, nicht die eines Dashboards.\n\nGelb ist das Preisschild aus dem Prospekt und bedeutet genau eine Sache: hier ist ein echter Vorteil. Rot ist die eine farbige Textzeile, die den Vorteil benennt. Alles andere ist Schwarz, Weiß und zwei Grautöne.",
+    "keyCharacteristics": [
+      "Ein Blatt, eine Spalte am Handy, zwei Spalten ab 900 px, wie Zeitungsspalten.",
+      "Eine Schriftfamilie, genau zwei Schriftgrößen, drei Gewichte.",
+      "Dicke schwarze Linien gliedern, graue Haarlinien trennen Zeilen.",
+      "Keine Rundungen, keine Schatten, keine Karten, keine Icons, keine Bilder.",
+      "Gelb und Rot nur als Signal für einen Preisvorteil.",
+      "Bedienelemente sind schwarz gerahmte Rechtecke, das gewählte ist schwarz gedruckt."
+    ],
+    "rules": [
+      { "name": "The Real Saving Rule", "body": "Ein Preisschild ist nur dann gelb, wenn die Daten einen Vorteil belegen: ein berechneter Rabatt in der Aktionsliste, der niedrigste Preis in der Merkliste. Bei Gleichstand sind mehrere Schilder gelb, bei gleichem Preis überall keines. Ohne Beleg bleibt das Schild weiß mit schwarzem Rahmen.", "section": "colors" },
+      { "name": "The One Red Line Rule", "body": "Rot ist Schrift und benennt den Vorteil in Worten. Eine Zeile hat höchstens eine rote Textzeile, und sie steht direkt unter dem Namen.", "section": "colors" },
+      { "name": "The No Tint Rule", "body": "Es gibt keine getönten Flächen. Eine Fläche ist weiß, schwarz oder prospektgelb.", "section": "colors" },
+      { "name": "The Two Sizes Rule", "body": "Es gibt genau zwei Schriftgrößen: `--size-text` (1rem) und `--size-large` (1.6rem). Die große Größe gehört dem Seitentitel und dem Preis. Eine dritte Größe ist ein Fehler, auch eine kleinere für Nebensachen.", "section": "typography" },
+      { "name": "The Weight Carries Rank Rule", "body": "Rang entsteht aus Gewicht (400, 700, 800), Versalien und Linien. Versalien mit Sperrung sind dem Rubrikkopf vorbehalten.", "section": "typography" },
+      { "name": "The Twenty Pixel Floor Rule", "body": "Kein Text steht unter 1rem bei einer Wurzel von 125 %.", "section": "typography" },
+      { "name": "The Fifty Six Rule", "body": "Jedes antippbare Element ist mindestens `--tap` hoch (2.8rem, 56 px bei 20 px Wurzel). Das gilt für Buttons, Tabs, Auswahlfelder, das Suchfeld und jeden Link im Rubrikenverzeichnis.", "section": "layout" },
+      { "name": "The Nothing Hidden Rule", "body": "Jede Auswahl steht ausgeschrieben auf dem Blatt. Kein Aufklappmenü, kein Drawer, kein Wischen als einziger Weg. Wer wegspringt, bekommt am Ende der Rubrik einen Button zurück zum Verzeichnis.", "section": "layout" },
+      { "name": "The Flat Sheet Rule", "body": "Nichts schwebt über dem Blatt. Kein Schatten, kein Verlauf, keine Überlagerung, kein fixierter Balken.", "section": "elevation" },
+      { "name": "The Three Rules Rule", "body": "Eine Linie ist 4 px schwarz, 2 px schwarz oder 1 px grau. Schwarz gliedert und rahmt, Grau trennt nur Gleichrangiges.", "section": "shapes" },
+      { "name": "The Square Corner Rule", "body": "Kein Element hat eine Rundung, auch kein Eingabefeld.", "section": "shapes" }
+    ],
+    "dos": [
+      "Do jede neue Liste als Rubrik bauen: 4 px Linie, Kopf in Versalien, Zeilen mit Haarlinien.",
+      "Do bei zwei Schriftgrößen bleiben (1rem und 1.6rem) und Rang über die Gewichte 400, 700, 800 ausdrücken.",
+      "Do jedes antippbare Element mindestens 2.8rem hoch machen.",
+      "Do das gelbe Preisschild an einen Beleg in den Daten binden.",
+      "Do Zustände drucken statt tönen: gewählt heißt weiß auf Schwarz.",
+      "Do jede Linie an den Seitenrändern des Blatts enden lassen.",
+      "Do den Focus Ring in beiden Teilen erhalten: 4 px Gelb außen, 3 px Schwarz innen.",
+      "Do Größen in rem schreiben, damit die Schrifteinstellung des Lesers wirkt."
+    ],
+    "donts": [
+      "Don't eine dritte Schriftgröße oder eine zweite Schriftfamilie einführen.",
+      "Don't Gelb oder Rot für etwas anderes als einen Preisvorteil verwenden. Die einzigen Ausnahmen für Gelb sind Focus Ring und Textmarkierung.",
+      "Don't Rundungen, Schatten, Verläufe oder getönte Flächen verwenden.",
+      "Don't Inhalte in Karten setzen. Eine Zeile hat eine Haarlinie, keinen Rahmen.",
+      "Don't Auswahl hinter Menüs, Drawern oder Wischgesten verstecken.",
+      "Don't einen Vergleichspreis durchstreichen. Die Daten kennen keinen regulären Preis.",
+      "Don't Logos, Produktbilder oder Icons einsetzen. Ketten erscheinen als Wort.",
+      "Don't `hairline` als Textfarbe oder als Rahmen eines Bedienelements verwenden.",
+      "Don't ein dunkles Schema ergänzen."
+    ]
+  }
+}

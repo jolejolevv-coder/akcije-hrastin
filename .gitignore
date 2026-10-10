@@ -6,3 +6,5 @@ node_modules/
 dist/
 web/public/data/
 data/akcije.json
+.impeccable/review/
+.impeccable/questions/

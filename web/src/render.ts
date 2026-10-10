@@ -1,7 +1,7 @@
 // Builds the DOM. All texts go in through textContent, never innerHTML,
 // so nothing from the data file can inject markup.
 
-import { countBestOffers } from "./filter";
+import { countBestOffers, type RubricSummary } from "./filter";
 import { cleanAddress, formatPrice, prettifyName } from "./format";
 import { TEXT } from "./text";
 import type { Chain, Deal, Store, WatchEntry, WatchOffer } from "./types";
@@ -9,159 +9,186 @@ import type { Chain, Deal, Store, WatchEntry, WatchOffer } from "./types";
 export interface Choice {
   id: string;
   label: string;
-  /** Optional number shown after the label, for example deals per category. */
-  count?: number;
 }
 
-const SELECTED_MARK = "✓ ";
+/** Order of the rubrics on the page: food first, household last. */
+const RUBRIC_ORDER = [
+  "meso",
+  "mlijecni",
+  "kruh",
+  "voce_povrce",
+  "osnovno",
+  "kava",
+  "pica",
+  "alkohol",
+  "slatko",
+  "smrznuto",
+  "riba",
+  "higijena",
+  "ciscenje",
+  "ljubimci",
+  "ostalo",
+];
 
-/** Icons per category. The order here is also the order of the buttons: food first. */
-const CATEGORY_ICONS: Record<string, string> = {
-  meso: "🥩",
-  mlijecni: "🥛",
-  kruh: "🍞",
-  voce_povrce: "🍎",
-  osnovno: "🍝",
-  kava: "☕",
-  pica: "🧃",
-  alkohol: "🍺",
-  slatko: "🍫",
-  smrznuto: "🧊",
-  riba: "🐟",
-  higijena: "🧴",
-  ciscenje: "🧽",
-  ljubimci: "🐕",
-  ostalo: "📦",
-};
-const CATEGORY_ORDER = Object.keys(CATEGORY_ICONS);
+const RUBRIC_ID_PREFIX = "rubrika-";
+/** Id of the heading above the rubric index, the target of every "back to the index" link. */
+const INDEX_ID = "index-title";
+const NO_BREAK_SPACE = "\u00a0";
+/** Up to this many stores are listed by address. Above that the row only says how many. */
+const MAX_STORES_NAMED = 2;
 
-/** Sort categories into button order. Unknown categories go to the end. */
+/** Sort categories into page order. Unknown categories go to the end. */
 export function inDisplayOrder<T extends { id: string }>(categories: T[]): T[] {
   const rank = (id: string) => {
-    const index = CATEGORY_ORDER.indexOf(id);
-    return index === -1 ? CATEGORY_ORDER.length : index;
+    const index = RUBRIC_ORDER.indexOf(id);
+    return index === -1 ? RUBRIC_ORDER.length : index;
   };
   return [...categories].sort((a, b) => rank(a.id) - rank(b.id));
 }
 
-export function categoryLabel(categoryId: string, name: string): string {
-  const icon = CATEGORY_ICONS[categoryId];
-  return icon ? `${icon} ${name}` : name;
-}
-
-/** Fill a container with big toggle buttons. Exactly one is selected. */
+/** Fill a container with toggle buttons. Exactly one is selected. */
 export function renderChoices(
   container: HTMLElement,
   choices: Choice[],
   selectedId: string,
   onSelect: (id: string) => void,
 ): void {
-  const buttons = choices.map((choice) => createChoiceButton(choice, choice.id === selectedId, onSelect));
+  const buttons = choices.map((choice) => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "choice";
+    button.setAttribute("aria-pressed", String(choice.id === selectedId));
+    button.textContent = choice.label;
+    button.addEventListener("click", () => onSelect(choice.id));
+    return button;
+  });
   container.replaceChildren(...buttons);
 }
 
-export function renderDeals(list: HTMLElement, deals: Deal[], chains: Map<string, Chain>): void {
-  list.replaceChildren(...deals.map((deal) => createDealCard(deal, chains.get(deal.chain))));
+/** The table of contents: one jump link per rubric, with its number of deals. */
+export function renderRubricIndex(list: HTMLElement, rubrics: RubricSummary[]): void {
+  const items = rubrics.map((rubric) => {
+    const link = document.createElement("a");
+    link.href = `#${RUBRIC_ID_PREFIX}${rubric.category.id}`;
+    link.append(
+      createText("span", "index-name", rubric.category.name),
+      createText("span", "index-count", String(rubric.total)),
+    );
+    const item = document.createElement("li");
+    item.append(link);
+    return item;
+  });
+  list.replaceChildren(...items);
 }
 
-export function renderWatchlist(list: HTMLElement, entries: WatchEntry[], chains: Map<string, Chain>): void {
-  list.replaceChildren(...entries.map((entry) => createWatchCard(entry, chains)));
+/** One section per rubric: head, its best rows and a button for the whole rubric. */
+export function renderRubrics(
+  container: HTMLElement,
+  rubrics: RubricSummary[],
+  chains: Map<string, Chain>,
+  onOpen: (categoryId: string) => void,
+): void {
+  const sections = rubrics.map((rubric) => {
+    const section = document.createElement("section");
+    section.className = "rubric";
+    section.id = `${RUBRIC_ID_PREFIX}${rubric.category.id}`;
+    const rows = document.createElement("ul");
+    rows.className = "rows";
+    renderRows(rows, rubric.top, chains, false);
+    section.append(
+      createRubricHead(rubric.category.name, String(rubric.total)),
+      rows,
+      createRubricActions(rubric, onOpen),
+    );
+    return section;
+  });
+  container.replaceChildren(...sections);
 }
 
-function createWatchCard(entry: WatchEntry, chains: Map<string, Chain>): HTMLElement {
-  const card = document.createElement("li");
-  card.className = "deal";
-  card.append(createText("h3", "watch-name", entry.name));
-  if (entry.offers.length === 0) {
-    card.append(createText("p", "deal-detail", TEXT.notAvailable));
-    return card;
+/** Deal rows. Detailed rows also show the unit price. */
+export function renderRows(list: HTMLElement, deals: Deal[], chains: Map<string, Chain>, detailed: boolean): void {
+  list.replaceChildren(...deals.map((deal) => createDealRow(deal, chains.get(deal.chain), detailed)));
+}
+
+export function renderWatchlist(container: HTMLElement, entries: WatchEntry[], chains: Map<string, Chain>): void {
+  container.replaceChildren(...entries.map((entry) => createWatchSection(entry, chains)));
+}
+
+function createRubricHead(title: string, count: string | null): HTMLElement {
+  const head = document.createElement("h2");
+  head.className = "rubric-head";
+  head.append(createText("span", "", title));
+  if (count !== null) {
+    head.append(createText("span", "rubric-count", count));
   }
-  const rows = document.createElement("ol");
-  rows.className = "watch-offers";
-  const bestCount = countBestOffers(entry);
-  rows.append(...entry.offers.map((offer, index) => createWatchRow(entry, offer, index < bestCount, chains)));
-  if (bestCount === 0) {
-    card.append(createText("p", "deal-detail", TEXT.samePriceEverywhere));
-  }
-  card.append(rows);
-  return card;
+  return head;
 }
 
-/** One chain inside a watchlist card. Rows with the best price are highlighted. */
-function createWatchRow(entry: WatchEntry, offer: WatchOffer, isBest: boolean, chains: Map<string, Chain>): HTMLElement {
+/** What closes a rubric: a button for all its deals and a way back to the index. */
+function createRubricActions(rubric: RubricSummary, onOpen: (categoryId: string) => void): HTMLElement {
+  const actions = document.createElement("div");
+  actions.className = "rubric-actions";
+  if (rubric.total > rubric.top.length) {
+    const openButton = document.createElement("button");
+    openButton.type = "button";
+    openButton.className = "button button-wide";
+    openButton.textContent = TEXT.allInRubric(rubric.category.name, rubric.total);
+    openButton.addEventListener("click", () => onOpen(rubric.category.id));
+    actions.append(openButton);
+  }
+  const backLink = document.createElement("a");
+  backLink.className = "button button-wide";
+  backLink.href = `#${INDEX_ID}`;
+  backLink.textContent = TEXT.backToIndex;
+  actions.append(backLink);
+  return actions;
+}
+
+function createDealRow(deal: Deal, chain: Chain | undefined, detailed: boolean): HTMLElement {
+  const hasSaving = deal.discount_percent !== null;
+  const body = document.createElement("div");
+  body.className = "row-details";
+  body.append(createShopLine(deal, chain));
+  const referenceLine = describeReference(deal);
+  if (referenceLine) {
+    body.append(createText("p", "row-line row-quiet", referenceLine));
+  }
+  if (detailed && deal.unit_price !== null && deal.unit_price !== deal.price) {
+    body.append(createText("p", "row-line row-quiet", `${TEXT.unitPrice} ${formatPrice(deal.unit_price)}`));
+  }
+  const storesLine = describeStores(deal, chain);
+  if (storesLine) {
+    body.append(createText("p", "row-line row-quiet", storesLine));
+  }
+  return createRow(prettifyName(deal.name, deal.brand), body, deal.price, hasSaving);
+}
+
+/** "Konzum · Popust 25 %". The saving is the only coloured text on the page. */
+function createShopLine(deal: Deal, chain: Chain | undefined): HTMLElement {
+  const line = document.createElement("p");
+  line.className = "row-line";
+  line.append(createText("span", "row-shop", chain?.name ?? deal.chain));
+  if (deal.discount_percent !== null) {
+    line.append(" · ", createText("span", "row-saving", savingLabel(deal.discount_percent)));
+  }
+  return line;
+}
+
+/** A row: title and price tag on the first line, the details below at full width. */
+function createRow(title: string, details: HTMLElement, price: number, highlighted: boolean): HTMLElement {
   const row = document.createElement("li");
-  row.className = isBest ? "watch-offer watch-offer-best" : "watch-offer";
-  const head = document.createElement("div");
-  head.className = "deal-top";
-  const chainName = chains.get(offer.chain)?.name ?? offer.chain;
-  head.append(
-    createText("span", `chain-badge chain-${offer.chain}`, chainName),
-    createText("span", "watch-price", formatPrice(offer.price)),
+  row.className = "row";
+  row.append(
+    createText("h3", "row-name", title),
+    createText("p", highlighted ? "tag tag-saving" : "tag", formatPrice(price)),
+    details,
   );
-  row.append(head);
-  const badges = describeOfferBadges(offer, isBest);
-  if (badges) {
-    row.append(createText("p", "watch-badges", badges));
-  }
-  row.append(createText("p", "deal-detail", prettifyName(offer.name, offer.brand)));
-  if (entry.by_unit_price && offer.unit_price !== null) {
-    row.append(createText("p", "deal-detail", `${TEXT.unitPrice} ${formatPrice(offer.unit_price)}`));
-  }
   return row;
 }
 
-function describeOfferBadges(offer: WatchOffer, isBest: boolean): string {
-  const parts: string[] = [];
-  if (isBest) {
-    parts.push(`★ ${TEXT.cheapest}`);
-  }
-  if (offer.on_promotion) {
-    const hasDiscount = offer.discount_percent !== null;
-    parts.push(hasDiscount ? `${TEXT.discount} ${offer.discount_percent} %` : TEXT.onPromotion);
-  }
-  return parts.join(" · ");
-}
-
-function createChoiceButton(choice: Choice, isSelected: boolean, onSelect: (id: string) => void): HTMLElement {
-  const button = document.createElement("button");
-  button.type = "button";
-  button.className = isSelected ? "choice choice-selected" : "choice";
-  button.setAttribute("aria-pressed", String(isSelected));
-  const countText = choice.count === undefined ? "" : ` (${choice.count})`;
-  button.textContent = `${isSelected ? SELECTED_MARK : ""}${choice.label}${countText}`;
-  button.disabled = choice.count === 0 && !isSelected;
-  button.addEventListener("click", () => onSelect(choice.id));
-  return button;
-}
-
-function createDealCard(deal: Deal, chain: Chain | undefined): HTMLElement {
-  const card = document.createElement("li");
-  card.className = "deal";
-  card.append(
-    createCardTop(deal, chain),
-    createText("h3", "deal-name", prettifyName(deal.name, deal.brand)),
-    createText("p", "deal-price", formatPrice(deal.price)),
-  );
-  const referenceLine = describeReference(deal);
-  if (referenceLine) {
-    card.append(createText("p", "deal-detail", referenceLine));
-  }
-  if (deal.unit_price !== null && deal.unit_price !== deal.price) {
-    card.append(createText("p", "deal-detail", `${TEXT.unitPrice} ${formatPrice(deal.unit_price)}`));
-  }
-  card.append(createText("p", "deal-stores", describeStores(deal, chain)));
-  return card;
-}
-
-function createCardTop(deal: Deal, chain: Chain | undefined): HTMLElement {
-  const top = document.createElement("div");
-  top.className = "deal-top";
-  const chainBadge = createText("span", `chain-badge chain-${deal.chain}`, chain?.name ?? deal.chain);
-  const hasDiscount = deal.discount_percent !== null;
-  const badgeText = hasDiscount ? `${TEXT.discount} ${deal.discount_percent} %` : TEXT.onPromotion;
-  const discountBadge = createText("span", hasDiscount ? "discount-badge" : "promotion-badge", badgeText);
-  top.append(chainBadge, discountBadge);
-  return top;
+/** "Popust 25 %" with a non breaking space, so the percent sign never wraps alone. */
+function savingLabel(percent: number): string {
+  return `${TEXT.discount}${NO_BREAK_SPACE}${percent}${NO_BREAK_SPACE}%`;
 }
 
 /** The comparison price line, only shown when there is a real saving. */
@@ -173,11 +200,15 @@ function describeReference(deal: Deal): string | null {
   return `${label} ${formatPrice(deal.reference_price)}`;
 }
 
-function describeStores(deal: Deal, chain: Chain | undefined): string {
+/** Names the stores only when the deal is not available in all of them. */
+function describeStores(deal: Deal, chain: Chain | undefined): string | null {
   if (!chain || deal.stores.length >= chain.stores.length) {
-    return TEXT.inAllStores;
+    return null;
   }
   const storesById = new Map(chain.stores.map((store) => [store.id, store]));
+  if (deal.stores.length > MAX_STORES_NAMED) {
+    return TEXT.onlyInSomeStores(deal.stores.length, chain.stores.length);
+  }
   const names = deal.stores
     .map((storeId) => storesById.get(storeId))
     .filter((store): store is Store => store !== undefined)
@@ -185,9 +216,57 @@ function describeStores(deal: Deal, chain: Chain | undefined): string {
   return `${TEXT.onlyInStores} ${names.join("; ")}`;
 }
 
+function createWatchSection(entry: WatchEntry, chains: Map<string, Chain>): HTMLElement {
+  const section = document.createElement("section");
+  section.className = "rubric";
+  section.append(createRubricHead(entry.name, null));
+  if (entry.offers.length === 0) {
+    section.append(createText("p", "row-line row-quiet", TEXT.notAvailable));
+    return section;
+  }
+  const bestCount = countBestOffers(entry);
+  if (bestCount === 0) {
+    section.append(createText("p", "row-line row-quiet", TEXT.samePriceEverywhere));
+  }
+  const rows = document.createElement("ul");
+  rows.className = "rows";
+  rows.append(...entry.offers.map((offer, index) => createWatchRow(entry, offer, index < bestCount, chains)));
+  section.append(rows);
+  return section;
+}
+
+/** One chain inside a watchlist entry. Rows with the best price carry the yellow tag. */
+function createWatchRow(entry: WatchEntry, offer: WatchOffer, isBest: boolean, chains: Map<string, Chain>): HTMLElement {
+  const body = document.createElement("div");
+  body.className = "row-details";
+  const notes = describeOfferNotes(offer, isBest);
+  if (notes) {
+    body.append(createText("p", "row-line row-saving", notes));
+  }
+  body.append(createText("p", "row-line row-quiet", prettifyName(offer.name, offer.brand)));
+  if (entry.by_unit_price && offer.unit_price !== null) {
+    body.append(createText("p", "row-line row-quiet", `${TEXT.unitPrice} ${formatPrice(offer.unit_price)}`));
+  }
+  return createRow(chains.get(offer.chain)?.name ?? offer.chain, body, offer.price, isBest);
+}
+
+function describeOfferNotes(offer: WatchOffer, isBest: boolean): string {
+  const parts: string[] = [];
+  if (isBest) {
+    parts.push(TEXT.cheapest);
+  }
+  if (offer.on_promotion) {
+    const hasDiscount = offer.discount_percent !== null;
+    parts.push(offer.discount_percent !== null && hasDiscount ? savingLabel(offer.discount_percent) : TEXT.onPromotion);
+  }
+  return parts.join(" · ");
+}
+
 function createText(tag: string, className: string, text: string): HTMLElement {
   const element = document.createElement(tag);
-  element.className = className;
+  if (className) {
+    element.className = className;
+  }
   element.textContent = text;
   return element;
 }
