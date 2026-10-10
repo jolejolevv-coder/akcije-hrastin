@@ -87,12 +87,14 @@ npm --prefix web run build
 | --- | --- |
 | `config/collector.json` | Ketten, Orte, Adresse der Archivliste |
 | `config/popis.json` | Merkliste, Regeln stehen oben in `collector/watchlist.py` |
+| `config/flyers.json` | Prospektseiten der Ketten |
 | `config/categories.json` | Stichwörter für die Warengruppen, Regeln stehen oben in `collector/categories.py` |
 | `collector/archive.py` | Archiv finden, laden, CSV lesen |
 | `collector/deals.py` | Aktionen aus den Preiszeilen ableiten |
 | `collector/history.py` | Vergleichspreis für Plodine |
 | `collector/categories.py` | Warengruppe je Artikel |
 | `collector/watchlist.py` | Merkliste: bester Preis je Kette |
+| `collector/flyers.py` | Wochenprospekte: Link und Gültigkeit je Kette |
 | `collector/pipeline.py` | Ablauf über alle Ketten, Ausgabedokument |
 | `collector/output.py` | Atomares Schreiben, Größengrenze |
 | `collector/__main__.py` | Kommandozeile |

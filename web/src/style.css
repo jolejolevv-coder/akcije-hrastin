@@ -169,8 +169,8 @@ a:focus-visible {
 
 .tabs {
   display: grid;
-  /* minmax(0, 1fr) keeps the three columns equal, whatever the labels need. */
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  /* Four tabs: two rows of two on a phone, one row from 620 px. */
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 8px;
   margin-top: 16px;
 }
@@ -375,6 +375,16 @@ a:focus-visible {
   margin-bottom: 20px;
 }
 
+/* A flyer inside the flyer tab: week, validity and the button that opens it. */
+.flyer {
+  padding: 12px 0 16px;
+  border-bottom: var(--rule-thin) solid var(--hairline);
+}
+
+.flyer .button-wide {
+  margin-top: 12px;
+}
+
 .page-footer {
   margin-top: 40px;
   padding-bottom: 32px;
@@ -405,6 +415,10 @@ a:focus-visible {
 /* Wider screens: the sheet gets columns, like the paper it comes from. */
 
 @media (min-width: 620px) {
+  .tabs {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
   .choice-grid {
     grid-template-columns: repeat(6, minmax(0, 1fr));
   }
@@ -424,6 +438,7 @@ a:focus-visible {
 
 @media (min-width: 900px) {
   .rubric-columns,
+  #flyers,
   #watchlist {
     display: grid;
     grid-template-columns: 1fr 1fr;

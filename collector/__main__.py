@@ -14,6 +14,7 @@ from pathlib import Path
 
 from collector.archive import ArchiveError, download_archive, fetch_archive_list, open_archive, pick_archive
 from collector.categories import CategoryError, load_rules
+from collector.flyers import FlyerConfigError, collect_flyers, load_sources
 from collector.history import HistoryError, drop_stale_entries, load_history
 from collector.output import MAX_DEALS_FILE_BYTES, OutputError, write_json
 from collector.pipeline import build_document, collect_all
@@ -24,11 +25,20 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_SETTINGS = PROJECT_ROOT / "config" / "collector.json"
 DEFAULT_CATEGORIES = PROJECT_ROOT / "config" / "categories.json"
 DEFAULT_WATCHLIST = PROJECT_ROOT / "config" / "popis.json"
+DEFAULT_FLYERS = PROJECT_ROOT / "config" / "flyers.json"
 DEFAULT_OUTPUT = PROJECT_ROOT / "data" / "akcije.json"
 DEFAULT_HISTORY = PROJECT_ROOT / "data" / "history.json"
 EXIT_OK = 0
 EXIT_FAILED = 1
-EXPECTED_ERRORS = (SettingsError, CategoryError, WatchlistError, ArchiveError, HistoryError, OutputError)
+EXPECTED_ERRORS = (
+    SettingsError,
+    CategoryError,
+    WatchlistError,
+    FlyerConfigError,
+    ArchiveError,
+    HistoryError,
+    OutputError,
+)
 
 log = logging.getLogger("collector")
 
@@ -44,6 +54,8 @@ def parse_arguments(argv: list[str]) -> argparse.Namespace:
     parser.add_argument("--settings", type=Path, default=DEFAULT_SETTINGS)
     parser.add_argument("--categories", type=Path, default=DEFAULT_CATEGORIES)
     parser.add_argument("--watchlist", type=Path, default=DEFAULT_WATCHLIST)
+    parser.add_argument("--flyers", type=Path, default=DEFAULT_FLYERS)
+    parser.add_argument("--no-flyers", action="store_true", help="Do not read the flyer pages of the chains.")
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
     parser.add_argument("--history", type=Path, default=DEFAULT_HISTORY)
     arguments = parser.parse_args(argv)
@@ -56,6 +68,7 @@ def run(arguments: argparse.Namespace) -> None:
     settings = load_settings(arguments.settings)
     rules = load_rules(arguments.categories)
     watchlist = load_watchlist(arguments.watchlist)
+    flyer_sources = [] if arguments.no_flyers else load_sources(arguments.flyers)
     history = load_history(arguments.history)
     with tempfile.TemporaryDirectory() as temp_dir:
         archive_path, data_date = _resolve_archive(arguments, settings, Path(temp_dir))
@@ -67,6 +80,8 @@ def run(arguments: argparse.Namespace) -> None:
         raise NoDealsError(f"No deals found in the archive for {data_date}")
     generated_at = datetime.datetime.now(datetime.timezone.utc).isoformat(timespec="seconds")
     document = build_document(results, missing_chain_ids, rules, watchlist, data_date, generated_at)
+    # Flyers follow the calendar, not the archive: next week counts from today.
+    document["flyers"] = collect_flyers(flyer_sources, datetime.date.today())
     size = write_json(arguments.output, document, MAX_DEALS_FILE_BYTES)
     drop_stale_entries(history, data_date)
     write_json(arguments.history, history)

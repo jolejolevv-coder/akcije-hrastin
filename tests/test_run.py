@@ -26,6 +26,7 @@ def run(tmp_path, settings_path, categories_path, watchlist_path):
                 "--settings", str(settings_path),
                 "--categories", str(categories_path),
                 "--watchlist", str(watchlist_path),
+                "--no-flyers",
                 "--output", str(output_path),
                 "--history", str(history_path),
             ]
@@ -194,3 +195,8 @@ def test_categories_carry_the_food_flag(run, archive_path):
     assert flags["pica"] is True
     assert flags["higijena"] is False
     assert flags["ostalo"] is False
+
+
+def test_run_without_flyers_writes_an_empty_flyer_list(run, archive_path):
+    _, document = run(archive_path, DAY_TWO)
+    assert document["flyers"] == []

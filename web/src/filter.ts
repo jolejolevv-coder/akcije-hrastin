@@ -1,7 +1,7 @@
 // Pure filter and sort logic. No DOM access here, so it is easy to test.
 
 import { normalizeText } from "./format";
-import type { Category, Deal, WatchEntry, WatchOffer } from "./types";
+import type { Category, ChainFlyers, Deal, WatchEntry, WatchOffer } from "./types";
 
 export const ALL = "all";
 
@@ -128,4 +128,9 @@ export function countBestOffers(entry: WatchEntry): number {
   const tied = entry.offers.filter((offer) => comparedPrice(entry, offer) === bestPrice).length;
   const allTheSame = tied === entry.offers.length && tied > 1;
   return allTheSame ? 0 : tied;
+}
+
+/** The flyer entries for the chosen chain, or for all chains. */
+export function flyersForChain(flyers: ChainFlyers[], chainId: string): ChainFlyers[] {
+  return flyers.filter((entry) => matchesChoice(entry.chain, chainId));
 }

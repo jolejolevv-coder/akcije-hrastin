@@ -15,6 +15,12 @@ const dateFormat = new Intl.DateTimeFormat(LOCALE, {
   timeZone: "UTC",
 });
 
+/** "2026-10-12" becomes "12.10." */
+export function formatShortDate(isoDate: string): string {
+  const [, month, day] = isoDate.split("-");
+  return `${Number(day)}.${Number(month)}.`;
+}
+
 export function formatPrice(price: number): string {
   return priceFormat.format(price);
 }

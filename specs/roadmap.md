@@ -154,6 +154,18 @@ Nicht geprüft oder offen:
 2. Wo lag die Annahme falsch? Meine erste Reihenfolge stellte sechs Ladenknöpfe vor die erste Aktion, obwohl genau das das bekannte Problem war. Die erste Schrift hatte eine durchgestrichene Null. Ein Teil meiner Aufnahmen für den Prüfer war veraltet und im falschen Maßstab, er hat sie zu Recht zurückgewiesen.
 3. Was besser spezifizieren? Der Skill `website-bauen` ist für Firmenseiten gebaut. Vier seiner neun Phasen passten nicht. Vor dem nächsten Einsatz zuerst klären, welche Phasen laufen. Und: Aufnahmen für eine Prüfung immer in einem Durchgang nach dem letzten Build.
 
+## Tab „Letci“ mit Wochenprospekten (10.10.2026)
+
+Spec in `specs/features/prospekte.md`. Vierter Tab mit Auswahl der Kette, je Kette der Prospekt dieser und der nächsten Woche als Link auf die Seite der Kette. Konzum, Lidl und Plodine werden täglich ausgelesen, Kaufland und Spar haben einen festen Link. Einbetten sperren die Ketten. Preise der Lidl Plus App werden nicht gelesen, sie stehen im Lidl Prospekt.
+
+Tests: 105 im Collector, 39 für die Seite.
+
+### Retrospektive
+
+1. Was lief gut? Die Sichtung vor der Spec hat zwei falsche Adressen aufgedeckt (Spar und Kaufland), bevor sie in der Seite gelandet wären.
+2. Wo lag die Annahme falsch? Meine geratenen Adressen für Spar und Kaufland führten auf Fehlerseiten. Erst der echte Browser zeigte die richtigen.
+3. Was besser spezifizieren? Für jede gelesene fremde Seite gehört ein Wächter dazu: Der Lauf sollte melden, wenn eine Kette seit Tagen keinen Prospekt mehr liefert.
+
 ## Später, nur nach Freigabe
 
 Links zu den aktuellen Prospekten, Preisverlauf je Produkt, Hinweis per Telegram bei Tiefpreis auf der Merkliste.

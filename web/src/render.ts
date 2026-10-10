@@ -2,9 +2,9 @@
 // so nothing from the data file can inject markup.
 
 import { countBestOffers, type RubricSummary } from "./filter";
-import { cleanAddress, formatPrice, prettifyName } from "./format";
+import { cleanAddress, formatPrice, formatShortDate, prettifyName } from "./format";
 import { TEXT } from "./text";
-import type { Chain, Deal, Store, WatchEntry, WatchOffer } from "./types";
+import type { Chain, ChainFlyers, Deal, Flyer, Store, WatchEntry, WatchOffer } from "./types";
 
 export interface Choice {
   id: string;
@@ -112,6 +112,49 @@ export function renderRows(list: HTMLElement, deals: Deal[], chains: Map<string,
 
 export function renderWatchlist(container: HTMLElement, entries: WatchEntry[], chains: Map<string, Chain>): void {
   container.replaceChildren(...entries.map((entry) => createWatchSection(entry, chains)));
+}
+
+/** One section per chain with its weekly flyers, or a plain link if none could be read. */
+export function renderFlyers(container: HTMLElement, entries: ChainFlyers[], chains: Map<string, Chain>): void {
+  const sections = entries.map((entry) => {
+    const section = document.createElement("section");
+    section.className = "rubric";
+    section.append(createRubricHead(chains.get(entry.chain)?.name ?? entry.chain, null));
+    if (entry.flyers.length === 0) {
+      section.append(createFlyerBlock(TEXT.flyerOverview, null, TEXT.flyerOverviewOpen, entry.overview_url));
+    }
+    for (const flyer of entry.flyers) {
+      const title = flyer.week === "next" ? TEXT.flyerNextWeek : TEXT.flyerThisWeek;
+      section.append(createFlyerBlock(title, describeValidity(flyer), TEXT.flyerOpen, flyer.url));
+    }
+    return section;
+  });
+  container.replaceChildren(...sections);
+}
+
+function describeValidity(flyer: Flyer): string {
+  const from = formatShortDate(flyer.valid_from);
+  return flyer.valid_to === null
+    ? TEXT.flyerValidFrom(from)
+    : TEXT.flyerValidRange(from, formatShortDate(flyer.valid_to));
+}
+
+/** A flyer: which week, how long it is valid, and a button that opens it in a new tab. */
+function createFlyerBlock(title: string, validity: string | null, buttonLabel: string, url: string): HTMLElement {
+  const block = document.createElement("div");
+  block.className = "flyer";
+  block.append(createText("h3", "row-name", title));
+  if (validity !== null) {
+    block.append(createText("p", "row-line row-quiet", validity));
+  }
+  const link = document.createElement("a");
+  link.className = "button button-wide";
+  link.href = url;
+  link.target = "_blank";
+  link.rel = "noopener noreferrer";
+  link.textContent = buttonLabel;
+  block.append(link);
+  return block;
 }
 
 function createRubricHead(title: string, count: string | null): HTMLElement {

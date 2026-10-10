@@ -55,6 +55,22 @@ export interface WatchEntry {
   offers: WatchOffer[];
 }
 
+/** One weekly flyer of a chain. It opens on the chain's own website. */
+export interface Flyer {
+  week: "current" | "next";
+  url: string;
+  valid_from: string;
+  /** Null if the chain publishes no end date. */
+  valid_to: string | null;
+}
+
+export interface ChainFlyers {
+  chain: string;
+  /** The chain's page listing all its flyers. Used when no single flyer could be read. */
+  overview_url: string;
+  flyers: Flyer[];
+}
+
 export interface DealsDocument {
   date: string;
   generated_at: string;
@@ -62,5 +78,7 @@ export interface DealsDocument {
   chains: Chain[];
   categories: Category[];
   watchlist: WatchEntry[];
+  /** Missing in data files written before the flyer tab existed. */
+  flyers?: ChainFlyers[];
   deals: Deal[];
 }

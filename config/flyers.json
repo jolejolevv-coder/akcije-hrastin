@@ -1,0 +1,9 @@
+{
+  "chains": [
+    {"id": "konzum", "overview_url": "https://www.konzum.hr/katalozi", "parser": "konzum"},
+    {"id": "lidl", "overview_url": "https://www.lidl.hr/letak", "parser": "lidl"},
+    {"id": "kaufland", "overview_url": "https://www.kaufland.hr/aktualni-katalozi.html", "parser": null},
+    {"id": "plodine", "overview_url": "https://www.plodine.hr/aktualni-katalozi", "parser": "plodine"},
+    {"id": "spar", "overview_url": "https://www.spar.hr/letci-i-katalozi", "parser": null}
+  ]
+}

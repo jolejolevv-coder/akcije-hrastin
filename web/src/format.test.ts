@@ -1,5 +1,13 @@
 import { describe, expect, it } from "vitest";
-import { ageInDays, cleanAddress, formatDate, formatPrice, normalizeText, prettifyName } from "./format";
+import {
+  ageInDays,
+  cleanAddress,
+  formatDate,
+  formatPrice,
+  formatShortDate,
+  normalizeText,
+  prettifyName,
+} from "./format";
 import { dealCountLabel } from "./text";
 
 describe("formatPrice", () => {
@@ -76,5 +84,12 @@ describe("dealCountLabel", () => {
     expect(dealCountLabel(21)).toBe("21 akcija");
     expect(dealCountLabel(22)).toBe("22 akcije");
     expect(dealCountLabel(5658)).toBe("5658 akcija");
+  });
+});
+
+describe("formatShortDate", () => {
+  it("writes day and month without leading zeros", () => {
+    expect(formatShortDate("2026-10-12")).toBe("12.10.");
+    expect(formatShortDate("2027-01-03")).toBe("3.1.");
   });
 });

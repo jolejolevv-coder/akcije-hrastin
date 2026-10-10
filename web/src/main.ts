@@ -6,6 +6,7 @@ import {
   ALL,
   dealsInCategories,
   DEFAULT_SELECTION,
+  flyersForChain,
   foodCategories,
   selectDeals,
   summarizeRubrics,
@@ -16,6 +17,7 @@ import { ageInDays, formatDate } from "./format";
 import {
   inDisplayOrder,
   renderChoices,
+  renderFlyers,
   renderRows,
   renderRubricIndex,
   renderRubrics,
@@ -35,13 +37,14 @@ const MAX_NORMAL_AGE_DAYS = 1;
 const SEARCH_DELAY_MS = 250;
 
 /** The three views of the page. "food" is what the reader sees first. */
-type Tab = "food" | "watchlist" | "all";
+type Tab = "food" | "watchlist" | "all" | "flyers";
 const START_TAB: Tab = "food";
 
 const TAB_CHOICES: Choice[] = [
   { id: "food", label: TEXT.tabFood },
   { id: "watchlist", label: TEXT.tabWatchlist },
   { id: "all", label: TEXT.tabAll },
+  { id: "flyers", label: TEXT.tabFlyers },
 ];
 
 const SORT_CHOICES: Choice[] = [
@@ -136,14 +139,20 @@ function showsListing(): boolean {
 function render(): void {
   renderChoices(element("tabs"), TAB_CHOICES, activeTab, (id) => changeTab(id as Tab));
   const showsWatchlist = activeTab === "watchlist";
+  const showsFlyers = activeTab === "flyers";
   element("view-watchlist").hidden = !showsWatchlist;
-  element("view-deals").hidden = showsWatchlist;
+  element("view-flyers").hidden = !showsFlyers;
+  element("view-deals").hidden = showsWatchlist || showsFlyers;
   if (showsWatchlist) {
     element("watchlist-intro").textContent = TEXT.watchlistIntro;
     renderWatchlist(element("watchlist"), documentData.watchlist, chainsById);
     return;
   }
-  renderChainButtons();
+  if (showsFlyers) {
+    renderFlyerTab();
+    return;
+  }
+  renderChainButtons("chain-buttons");
   const listing = showsListing();
   element("top-rubric").hidden = listing;
   element("overview").hidden = listing;
@@ -155,12 +164,21 @@ function render(): void {
   }
 }
 
-function renderChainButtons(): void {
+/** The shop filter. The deal tabs and the flyer tab each have their own set of buttons. */
+function renderChainButtons(containerId: string): void {
   const choices: Choice[] = [
     { id: ALL, label: TEXT.allChains },
     ...documentData.chains.map((chain) => ({ id: chain.id, label: chain.name })),
   ];
-  renderChoices(element("chain-buttons"), choices, selection.chainId, (id) => changeSelection({ chainId: id }));
+  renderChoices(element(containerId), choices, selection.chainId, (id) => changeSelection({ chainId: id }));
+}
+
+/** Flyer tab: pick a shop, see its flyers for this week and the next. */
+function renderFlyerTab(): void {
+  element("flyers-intro").textContent = TEXT.flyersIntro;
+  renderChainButtons("flyer-chain-buttons");
+  const entries = flyersForChain(documentData.flyers ?? [], selection.chainId);
+  renderFlyers(element("flyers"), entries, chainsById);
 }
 
 /** Overview: the biggest savings of the day, the index and every rubric with its best rows. */

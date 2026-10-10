@@ -2,13 +2,14 @@ import { describe, expect, it } from "vitest";
 import {
   countBestOffers,
   dealsInCategories,
+  flyersForChain,
   DEFAULT_SELECTION,
   foodCategories,
   selectDeals,
   sortDeals,
   summarizeRubrics,
 } from "./filter";
-import type { Category, Deal, WatchEntry, WatchOffer } from "./types";
+import type { Category, ChainFlyers, Deal, WatchEntry, WatchOffer } from "./types";
 
 function deal(overrides: Partial<Deal>): Deal {
   return {
@@ -188,5 +189,20 @@ describe("summarizeRubrics", () => {
     const reversed = [...categories].reverse();
     const rubrics = summarizeRubrics(DEALS, reversed, DEFAULT_SELECTION, 5);
     expect(rubrics.map((rubric) => rubric.category.id)).toEqual(["mlijecni", "kava"]);
+  });
+});
+
+describe("flyersForChain", () => {
+  const flyers: ChainFlyers[] = [
+    { chain: "konzum", overview_url: "k", flyers: [] },
+    { chain: "lidl", overview_url: "l", flyers: [] },
+  ];
+
+  it("returns every chain for the choice all", () => {
+    expect(flyersForChain(flyers, "all").map((entry) => entry.chain)).toEqual(["konzum", "lidl"]);
+  });
+
+  it("returns only the chosen chain", () => {
+    expect(flyersForChain(flyers, "lidl").map((entry) => entry.chain)).toEqual(["lidl"]);
   });
 });
