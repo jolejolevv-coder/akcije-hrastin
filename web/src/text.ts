@@ -33,6 +33,9 @@ export const TEXT = {
   noResults: "Nema akcija za ovaj odabir. Probajte drugu riječ ili drugu trgovinu.",
   discount: "Popust",
   onPromotion: "Akcija",
+  regularPrice: "Redovna cijena",
+  loadingPrices: "Učitavanje redovnih cijena…",
+  pricesError: "Redovne cijene se trenutno ne mogu učitati. Prikazane su samo akcije.",
   lowest30Days: "Najniže u 30 dana:",
   beforePromotion: "Prije akcije:",
   unitPrice: "Za jedinicu mjere:",
@@ -42,6 +45,13 @@ export const TEXT = {
   few: "akcije",
   many: "akcija",
 } as const;
+
+/** Croatian plural: 1 proizvod, 2 proizvoda, 5 proizvoda, 21 proizvod. */
+export function productCountLabel(count: number): string {
+  const lastDigit = count % 10;
+  const isEleven = count % 100 === 11;
+  return lastDigit === 1 && !isEleven ? `${count} proizvod` : `${count} proizvoda`;
+}
 
 /** Croatian plural: 1 akcija, 2 akcije, 5 akcija, 21 akcija, 22 akcije. */
 export function dealCountLabel(count: number): string {

@@ -213,6 +213,8 @@ function createShopLine(deal: Deal, chain: Chain | undefined): HTMLElement {
   line.append(createText("span", "row-shop", chain?.name ?? deal.chain));
   if (deal.discount_percent !== null) {
     line.append(" · ", createText("span", "row-saving", savingLabel(deal.discount_percent)));
+  } else if (deal.regular) {
+    line.append(" · ", createText("span", "row-quiet", TEXT.regularPrice));
   }
   return line;
 }
@@ -245,7 +247,8 @@ function describeReference(deal: Deal): string | null {
 
 /** Names the stores only when the deal is not available in all of them. */
 function describeStores(deal: Deal, chain: Chain | undefined): string | null {
-  if (!chain || deal.stores.length >= chain.stores.length) {
+  // The catalogue of regular prices does not say which stores carry a product.
+  if (!chain || deal.regular || deal.stores.length >= chain.stores.length) {
     return null;
   }
   const storesById = new Map(chain.stores.map((store) => [store.id, store]));

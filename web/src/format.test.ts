@@ -8,7 +8,7 @@ import {
   normalizeText,
   prettifyName,
 } from "./format";
-import { dealCountLabel } from "./text";
+import { dealCountLabel, productCountLabel } from "./text";
 
 describe("formatPrice", () => {
   it("uses Croatian decimal comma and the euro sign", () => {
@@ -91,5 +91,15 @@ describe("formatShortDate", () => {
   it("writes day and month without leading zeros", () => {
     expect(formatShortDate("2026-10-12")).toBe("12.10.");
     expect(formatShortDate("2027-01-03")).toBe("3.1.");
+  });
+});
+
+describe("productCountLabel", () => {
+  it("uses the Croatian plural forms", () => {
+    expect(productCountLabel(1)).toBe("1 proizvod");
+    expect(productCountLabel(2)).toBe("2 proizvoda");
+    expect(productCountLabel(11)).toBe("11 proizvoda");
+    expect(productCountLabel(21)).toBe("21 proizvod");
+    expect(productCountLabel(128)).toBe("128 proizvoda");
   });
 });

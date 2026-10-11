@@ -34,6 +34,10 @@ export interface Deal {
   reference_kind: ReferenceKind | null;
   discount_percent: number | null;
   stores: string[];
+  /** True for a product without a promotion, shown only in search results. */
+  regular?: boolean;
+  /** Name and brand in lowercase without diacritics, prepared for large lists. */
+  search_text?: string;
 }
 
 /** What one chain currently charges for a watchlist item. */
@@ -69,6 +73,18 @@ export interface ChainFlyers {
   /** The chain's page listing all its flyers. Used when no single flyer could be read. */
   overview_url: string;
   flyers: Flyer[];
+}
+
+/** One product of the price catalogue: chain position, name, brand, category position, price, unit price. */
+export type CatalogueRow = [number, string, string, number, number, number | null];
+
+/** data/cijene.json: all products without a promotion, written compactly. */
+export interface PriceCatalogue {
+  date: string;
+  chains: string[];
+  categories: string[];
+  columns: string[];
+  items: CatalogueRow[];
 }
 
 export interface DealsDocument {

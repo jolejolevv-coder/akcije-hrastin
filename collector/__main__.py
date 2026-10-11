@@ -16,8 +16,8 @@ from collector.archive import ArchiveError, download_archive, fetch_archive_list
 from collector.categories import CategoryError, load_rules
 from collector.flyers import FlyerConfigError, collect_flyers, load_sources
 from collector.history import HistoryError, drop_stale_entries, load_history
-from collector.output import MAX_DEALS_FILE_BYTES, OutputError, write_json
-from collector.pipeline import build_document, collect_all
+from collector.output import MAX_DEALS_FILE_BYTES, MAX_PRICES_FILE_BYTES, OutputError, write_json
+from collector.pipeline import build_document, build_price_catalogue, collect_all
 from collector.settings import Settings, SettingsError, load_settings
 from collector.watchlist import WatchlistError, load_watchlist
 
@@ -27,6 +27,7 @@ DEFAULT_CATEGORIES = PROJECT_ROOT / "config" / "categories.json"
 DEFAULT_WATCHLIST = PROJECT_ROOT / "config" / "popis.json"
 DEFAULT_FLYERS = PROJECT_ROOT / "config" / "flyers.json"
 DEFAULT_OUTPUT = PROJECT_ROOT / "data" / "akcije.json"
+DEFAULT_PRICES_OUTPUT = PROJECT_ROOT / "data" / "cijene.json"
 DEFAULT_HISTORY = PROJECT_ROOT / "data" / "history.json"
 EXIT_OK = 0
 EXIT_FAILED = 1
@@ -57,6 +58,7 @@ def parse_arguments(argv: list[str]) -> argparse.Namespace:
     parser.add_argument("--flyers", type=Path, default=DEFAULT_FLYERS)
     parser.add_argument("--no-flyers", action="store_true", help="Do not read the flyer pages of the chains.")
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
+    parser.add_argument("--prices-output", type=Path, default=DEFAULT_PRICES_OUTPUT)
     parser.add_argument("--history", type=Path, default=DEFAULT_HISTORY)
     arguments = parser.parse_args(argv)
     if arguments.archive and not arguments.date:
@@ -83,6 +85,8 @@ def run(arguments: argparse.Namespace) -> None:
     # Flyers follow the calendar, not the archive: next week counts from today.
     document["flyers"] = collect_flyers(flyer_sources, datetime.date.today())
     size = write_json(arguments.output, document, MAX_DEALS_FILE_BYTES)
+    catalogue = build_price_catalogue(results, rules, data_date)
+    write_json(arguments.prices_output, catalogue, MAX_PRICES_FILE_BYTES)
     drop_stale_entries(history, data_date)
     write_json(arguments.history, history)
     log.info("Wrote %d deals for %s (%d bytes)", len(document["deals"]), data_date, size)

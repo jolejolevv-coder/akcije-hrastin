@@ -17,6 +17,7 @@ def run(tmp_path, settings_path, categories_path, watchlist_path):
     """Run the collector on an archive and return (exit code, output document or None)."""
     output_path = tmp_path / "out" / "akcije.json"
     history_path = tmp_path / "out" / "history.json"
+    prices_path = tmp_path / "out" / "cijene.json"
 
     def run_collector(archive_file, date):
         exit_code = main(
@@ -29,6 +30,7 @@ def run(tmp_path, settings_path, categories_path, watchlist_path):
                 "--no-flyers",
                 "--output", str(output_path),
                 "--history", str(history_path),
+                "--prices-output", str(prices_path),
             ]
         )
         document = json.loads(output_path.read_text(encoding="utf-8")) if output_path.exists() else None
@@ -200,3 +202,33 @@ def test_categories_carry_the_food_flag(run, archive_path):
 def test_run_without_flyers_writes_an_empty_flyer_list(run, archive_path):
     _, document = run(archive_path, DAY_TWO)
     assert document["flyers"] == []
+
+
+def read_catalogue(tmp_path):
+    return json.loads((tmp_path / "out" / "cijene.json").read_text(encoding="utf-8"))
+
+
+def test_price_catalogue_lists_products_without_promotion(run, archive_path, tmp_path):
+    run(archive_path, DAY_TWO)
+    catalogue = read_catalogue(tmp_path)
+    assert catalogue["date"] == DAY_TWO
+    assert catalogue["chains"] == ["konzum", "plodine"]
+    assert catalogue["columns"] == ["chain", "name", "brand", "category", "price", "unit_price"]
+    names = [item[1] for item in catalogue["items"]]
+    assert names == ["KAVA MLJEVENA 250g", "VODA JAMNICA 1 L BOCA"]
+
+
+def test_price_catalogue_rows_point_at_chain_and_category(run, archive_path, tmp_path):
+    run(archive_path, DAY_TWO)
+    catalogue = read_catalogue(tmp_path)
+    water = next(item for item in catalogue["items"] if item[1] == "VODA JAMNICA 1 L BOCA")
+    chain_index, _, brand, category_index, price, unit_price = water
+    assert catalogue["chains"][chain_index] == "plodine"
+    assert catalogue["categories"][category_index] == "pica"
+    assert (brand, price, unit_price) == ("JAMNICA", 0.75, 0.75)
+
+
+def test_price_catalogue_leaves_out_products_on_promotion(run, archive_path, tmp_path):
+    run(archive_path, DAY_TWO)
+    names = [item[1] for item in read_catalogue(tmp_path)["items"]]
+    assert "MLIJEKO TRAJNO 1L" not in names

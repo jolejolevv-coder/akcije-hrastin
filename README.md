@@ -35,6 +35,7 @@ Tests:
 ## Was der Collector schreibt
 
 * `data/akcije.json`: alle Aktionen des Tages, sortiert nach Rabatt. Das liest später die Seite.
+* `data/cijene.json`: alle Artikel ohne Aktion mit regulärem Preis, kompakt. Die Seite lädt sie erst bei einer Suche.
 * `data/history.json`: letzter regulärer Preis je Plodine Artikel. Daraus entsteht der Vergleichspreis, weil Plodine kein 30 Tage Tief veröffentlicht.
 
 Schlägt ein Lauf fehl, bleiben beide Dateien unverändert und der Prozess endet mit Code 1.
@@ -105,6 +106,7 @@ Das Datenformat des Archivs steht in `docs/datenformat.md`.
 | --- | --- |
 | `web/index.html` | Gerüst der Seite |
 | `web/src/main.ts` | Daten laden, Auswahl merken, neu zeichnen |
+| `web/src/catalogue.ts` | Reguläre Preise für die Suche aufbereiten |
 | `web/src/filter.ts` | Filtern, Suchen, Sortieren (ohne DOM, getestet) |
 | `web/src/format.ts` | Preise, Datum, Produktnamen, Adressen |
 | `web/src/render.ts` | Knöpfe und Karten aufbauen |

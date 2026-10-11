@@ -98,7 +98,7 @@ function matchesSearch(deal: Deal, searchWords: string[]): boolean {
   if (searchWords.length === 0) {
     return true;
   }
-  const haystack = normalizeText(`${deal.name} ${deal.brand}`);
+  const haystack = deal.search_text ?? normalizeText(`${deal.name} ${deal.brand}`);
   return searchWords.every((word) => haystack.includes(word));
 }
 

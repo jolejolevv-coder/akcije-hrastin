@@ -7,7 +7,7 @@ from dataclasses import dataclass
 from collector import deals as deal_logic
 from collector.archive import has_file
 from collector.categories import CategoryRules, categorize
-from collector.deals import Deal, Store
+from collector.deals import Deal, Product, Store
 from collector.history import History, reference_price, remember_regular_prices
 from collector.settings import REFERENCE_HISTORY, Chain, Settings
 from collector.watchlist import WatchItem, WatchOffer, best_offer
@@ -24,6 +24,8 @@ class ChainResult:
     deals: list[Deal]
     # One entry per watchlist item, in watchlist order. None if the chain has no match.
     watch_offers: list[WatchOffer | None]
+    # Products without a promotion today: (product, lowest regular price, its unit price).
+    regular_items: list[tuple[Product, float, float | None]]
 
 
 def collect_all(
@@ -78,7 +80,12 @@ def collect_chain(
         best_offer(chain.chain_id, item, products, scan, deals_by_product, rules) for item in watchlist
     ]
     log.info("Chain %s: %d stores, %d deals", chain.chain_id, len(stores), len(deals))
-    return ChainResult(chain, stores, deals, watch_offers)
+    regular_items = [
+        (products[product_id], price, scan.regular_unit_prices.get(product_id))
+        for product_id, price in scan.regular_prices.items()
+        if product_id not in scan.promotions and product_id in products
+    ]
+    return ChainResult(chain, stores, deals, watch_offers, regular_items)
 
 
 def build_document(
@@ -103,6 +110,30 @@ def build_document(
         ],
         "watchlist": [_watch_entry(index, item, results) for index, item in enumerate(watchlist)],
         "deals": [_deal_entry(deal, rules) for deal in all_deals],
+    }
+
+
+def build_price_catalogue(results: list[ChainResult], rules: CategoryRules, data_date: str) -> dict:
+    """All products without a promotion, for the search of the website.
+
+    The file is large, so it is written compactly: one array per product, with the
+    chain and the category as positions in the two lists at the top.
+    """
+    chain_ids = [result.chain.chain_id for result in results]
+    category_ids = [category.category_id for category in rules.categories]
+    items = []
+    for chain_index, result in enumerate(results):
+        for product, price, unit_price in sorted(result.regular_items, key=lambda item: item[0].name):
+            category_id = categorize(rules, product.name, product.source_category)
+            items.append(
+                [chain_index, product.name, product.brand, category_ids.index(category_id), price, unit_price]
+            )
+    return {
+        "date": data_date,
+        "chains": chain_ids,
+        "categories": category_ids,
+        "columns": ["chain", "name", "brand", "category", "price", "unit_price"],
+        "items": items,
     }
 
 

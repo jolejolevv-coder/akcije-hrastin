@@ -2,6 +2,7 @@
 
 import "@fontsource-variable/public-sans";
 import "./style.css";
+import { catalogueToDeals } from "./catalogue";
 import {
   ALL,
   dealsInCategories,
@@ -24,10 +25,13 @@ import {
   renderWatchlist,
   type Choice,
 } from "./render";
-import { dealCountLabel, TEXT } from "./text";
-import type { Category, Chain, Deal, DealsDocument } from "./types";
+import { dealCountLabel, productCountLabel, TEXT } from "./text";
+import type { Category, Chain, Deal, DealsDocument, PriceCatalogue } from "./types";
 
 const DATA_URL = "./data/akcije.json";
+const CATALOGUE_URL = "./data/cijene.json";
+/** The catalogue of regular prices is only fetched for a search of at least this length. */
+const MIN_SEARCH_LENGTH = 2;
 /** Rows shown under each rubric on the overview. */
 const ROWS_PER_RUBRIC = 5;
 /** Rows added per step in the full list of one rubric or of a search. */
@@ -58,6 +62,9 @@ let chainsById: Map<string, Chain>;
 let activeTab: Tab = START_TAB;
 let selection: Selection = { ...DEFAULT_SELECTION };
 let visibleCount = PAGE_SIZE;
+/** Regular prices: not requested yet, on their way, here, or failed. */
+let catalogueState: "idle" | "loading" | "ready" | "failed" = "idle";
+let catalogueDeals: Deal[] = [];
 
 function element<T extends HTMLElement>(id: string): T {
   const found = document.getElementById(id);
@@ -73,6 +80,34 @@ async function loadData(): Promise<DealsDocument> {
     throw new Error(`Loading ${DATA_URL} failed with status ${response.status}`);
   }
   return (await response.json()) as DealsDocument;
+}
+
+/** Fetch the regular prices once, in the background, and redraw when they are here. */
+function requestCatalogue(): void {
+  if (catalogueState !== "idle") {
+    return;
+  }
+  catalogueState = "loading";
+  fetch(CATALOGUE_URL, { cache: "no-cache" })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(`Loading ${CATALOGUE_URL} failed with status ${response.status}`);
+      }
+      return response.json() as Promise<PriceCatalogue>;
+    })
+    .then((catalogue) => {
+      catalogueDeals = catalogueToDeals(catalogue);
+      catalogueState = "ready";
+    })
+    .catch((error: unknown) => {
+      console.error(error);
+      catalogueState = "failed";
+    })
+    .finally(render);
+}
+
+function isSearching(): boolean {
+  return selection.searchText.trim().length >= MIN_SEARCH_LENGTH;
 }
 
 function showNotice(text: string): void {
@@ -192,15 +227,41 @@ function renderOverview(): void {
   renderRubrics(element("rubrics"), rubrics, chainsById, openRubric);
 }
 
+/** What the full list draws from: the promotions, and for a search also the regular prices. */
+function listingSource(): Deal[] {
+  if (!isSearching() || catalogueState !== "ready") {
+    return dealsInTab();
+  }
+  return [...dealsInTab(), ...dealsInCategories(catalogueDeals, categoriesInTab())];
+}
+
+/** The line under the list head that tells the reader about the regular prices. */
+function catalogueNote(): string {
+  if (!isSearching()) {
+    return "";
+  }
+  if (catalogueState === "loading") {
+    return TEXT.loadingPrices;
+  }
+  return catalogueState === "failed" ? TEXT.pricesError : "";
+}
+
 /** Full list: all deals of one rubric, or all search results, with sorting. */
 function renderListing(): void {
-  const matching = selectDeals(dealsInTab(), selection);
+  if (isSearching()) {
+    requestCatalogue();
+  }
+  const matching = selectDeals(listingSource(), selection);
   const isEmpty = matching.length === 0;
+  const stillLoading = isSearching() && catalogueState === "loading";
+  const countLabel = isSearching() ? productCountLabel(matching.length) : dealCountLabel(matching.length);
   element("back").textContent = TEXT.backToRubrics;
   element("listing-title-text").textContent = listingTitle();
-  element("listing-count").textContent = isEmpty ? "" : dealCountLabel(matching.length);
+  element("listing-count").textContent = isEmpty ? "" : countLabel;
+  element("catalogue-note").textContent = catalogueNote();
+  element("catalogue-note").hidden = catalogueNote() === "";
   element("no-results").textContent = TEXT.noResults;
-  element("no-results").hidden = !isEmpty;
+  element("no-results").hidden = !isEmpty || stillLoading;
   element("sort-block").hidden = isEmpty;
   renderChoices(element("sort-buttons"), SORT_CHOICES, selection.sortOrder, (id) =>
     changeSelection({ sortOrder: id as SortOrder }),

@@ -166,6 +166,16 @@ Tests: 105 im Collector, 39 für die Seite.
 2. Wo lag die Annahme falsch? Meine geratenen Adressen für Spar und Kaufland führten auf Fehlerseiten. Erst der echte Browser zeigte die richtigen.
 3. Was besser spezifizieren? Für jede gelesene fremde Seite gehört ein Wächter dazu: Der Lauf sollte melden, wenn eine Kette seit Tagen keinen Prospekt mehr liefert.
 
+## Suche über alle Preise (11.10.2026)
+
+Spec in `specs/features/suche-alle-preise.md`. Die Suche zeigt jetzt auch Artikel ohne Aktion mit regulärem Preis. Dafür schreibt der Collector `data/cijene.json` (rund 92000 Artikel, gepackt 1,4 MB), die Seite lädt sie erst beim ersten Suchbegriff ab zwei Zeichen. Tests: 108 im Collector, 44 für die Seite.
+
+### Retrospektive
+
+1. Was lief gut? Die Messung vor dem Bau hat die Entscheidung für das Nachladen getragen. Die Zeilenanzeige konnte unverändert weiterverwendet werden.
+2. Wo lag die Annahme falsch? Keine falsche Annahme aufgefallen. Offen bleibt, wie sich 5,7 MB auf einem alten Handy anfühlen.
+3. Was besser spezifizieren? Ein Maß für „spürbare Verzögerung“ fehlte in der Spec. Beim nächsten Mal eine Zahl nennen.
+
 ## Später, nur nach Freigabe
 
 Links zu den aktuellen Prospekten, Preisverlauf je Produkt, Hinweis per Telegram bei Tiefpreis auf der Merkliste.
