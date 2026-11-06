@@ -4,9 +4,9 @@ import json
 import os
 from pathlib import Path
 
-MAX_DEALS_FILE_BYTES = 2 * 1024 * 1024
+MAX_DEALS_FILE_BYTES = 4 * 1024 * 1024
 # The catalogue of all regular prices. The website loads it only when the reader searches.
-MAX_PRICES_FILE_BYTES = 12 * 1024 * 1024
+MAX_PRICES_FILE_BYTES = 16 * 1024 * 1024
 TEMP_SUFFIX = ".tmp"
 
 
